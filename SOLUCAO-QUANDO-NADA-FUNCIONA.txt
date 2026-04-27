@@ -1,0 +1,40 @@
+Voce nao esta sozinho: quando Node, Python e scripts falham, use ISTO
+=====================================================================
+
+A) ABRIR NO SEU PC (sem terminal, sem instalacao)
+--------------------------------------------------
+1) Duplo clique no arquivo:   ABRIR-PORTAL.vbs
+   Ele tenta abrir o Microsoft Edge com o portal.
+
+2) Se nada aparecer, copie o arquivo
+      smartia-portal-offline.html
+   para a Area de Trabalho, depois duplo clique nele.
+
+3) Se abrir o Bloco de Notas em vez do navegador:
+   - Botao direito no .html > Abrir com > Microsoft Edge
+   - Marque "Sempre usar este app"
+
+
+B) VER O PORTAL NA INTERNET (nao depende do seu Windows)
+--------------------------------------------------------
+1) Entre na pasta:  netlify-drop
+
+2) Botao direito nessa pasta > Enviar para > Pasta compactada (zip)
+
+3) Abra no navegador:  https://app.netlify.com/drop
+
+4) Arraste o ZIP para a pagina. Copie o link que aparecer (....netlify.app)
+
+Isso funciona mesmo se Python/Node nunca tiverem funcionado no seu PC.
+
+
+C) OneDrive
+-----------
+Se arquivos estiverem "so na nuvem", o Windows pode nao abrir direito.
+Botao direito na pasta SmartIA > "Manter sempre neste dispositivo".
+
+
+D) Ultimo recurso
+-----------------
+Envie o arquivo smartia-portal-offline.html para outro computador
+(casa, colega) e abra la — e um unico arquivo HTML.

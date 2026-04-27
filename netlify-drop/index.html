@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartIA — Portal de Licitações (offline)</title>
+  <style>
+    :root {
+      --bg: #0b1628;
+      --sidebar: #0f2137;
+      --surface: #132a45;
+      --border: #1e3a5f;
+      --text: #e8f4f8;
+      --muted: #8ba3b8;
+      --accent: #2dd4bf;
+      --accent-dim: #115e59;
+      --heat: #0d9488;
+      --amber: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .layout { display: flex; min-height: 100vh; }
+    aside {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      padding: 1rem 0.5rem;
+    }
+    .brand {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .brand strong { display: block; font-size: 0.95rem; }
+    .brand small { color: var(--muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    nav button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      margin-bottom: 0.25rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    nav button:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    nav button.active {
+      background: rgba(45, 212, 191, 0.18);
+      color: #ccfbf1;
+      font-weight: 600;
+    }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 33, 55, 0.95);
+    }
+    header h1 { margin: 0; font-size: 1.1rem; }
+    header p { margin: 0.25rem 0 0; font-size: 0.85rem; color: var(--muted); }
+    .content { padding: 1.25rem 1.5rem; flex: 1; }
+    .banner {
+      background: rgba(45, 212, 191, 0.1);
+      border: 1px solid var(--accent-dim);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.8rem;
+      color: #99f6e4;
+    }
+    .grid { display: grid; gap: 1rem; }
+    @media (min-width: 640px) { .grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 900px) { .grid.cols-2 { grid-template-columns: repeat(2, 1fr); } }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+    }
+    .card h3 { margin: 0 0 0.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+    .card .big { font-family: ui-monospace, monospace; font-size: 1.5rem; font-weight: 600; }
+    .muted { color: var(--muted); font-size: 0.75rem; margin-top: 0.35rem; }
+    .heat { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .heat button {
+      min-width: 3.25rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .heat button.on { outline: 2px solid var(--accent); }
+    .proc {
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      background: var(--surface);
+      margin-bottom: 0.75rem;
+    }
+    .proc h4 { margin: 0; font-size: 0.9rem; }
+    .proc .meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+    .tags span {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--muted);
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.75rem; }
+    .btn {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 0.35rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .btn-primary { border-color: var(--accent-dim); background: rgba(45,212,191,0.12); color: var(--accent); }
+    .score-btns button { margin-right: 0.35rem; margin-bottom: 0.35rem; }
+    .score-btns button.on { border-color: var(--accent); background: rgba(45,212,191,0.15); color: var(--accent); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    th, td { border-bottom: 1px solid var(--border); padding: 0.6rem 0.5rem; text-align: left; }
+    th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 0.65rem; }
+    tr:hover { background: rgba(255,255,255,0.03); }
+    .badge { font-size: 0.6rem; padding: 0.15rem 0.4rem; border-radius: 999px; background: rgba(251,191,36,0.2); color: var(--amber); }
+    .hidden { display: none !important; }
+    .tabs { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+    .tabs button {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      color: var(--muted); padding: 0.5rem 0.75rem; cursor: pointer; font-size: 0.875rem;
+    }
+    .tabs button.on { color: var(--accent); border-bottom-color: var(--accent); }
+    .tabs button.fav-tab.on { color: var(--amber); border-bottom-color: var(--amber); }
+    input, select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.35rem;
+      font-size: 0.85rem;
+    }
+    label { font-size: 0.7rem; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+    .filters { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div id="boot-error" style="display:none;margin:0;padding:12px 16px;background:#7f1d1d;color:#fecaca;font-size:14px;font-family:Consolas,monospace;"></div>
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <strong>SmartIA</strong>
+        <small>Portal (offline)</small>
+      </div>
+      <nav>
+        <button type="button" data-view="dash" class="active">Dashboard</button>
+        <button type="button" data-view="intel">Mapa da Inteligência</button>
+        <button type="button" data-view="comp">Mapa de Competitividade</button>
+        <button type="button" data-view="licit">Licitações</button>
+      </nav>
+    </aside>
+    <div class="main">
+      <header>
+        <h1 id="page-title">Dashboard</h1>
+        <p id="page-desc">Resumo e oportunidades (dados de exemplo).</p>
+      </header>
+      <div class="content">
+        <div class="banner">
+          Esta página funciona <strong>sem Node.js e sem internet</strong> (exceto ao clicar em WhatsApp/Telegram).
+          Abra este arquivo com duplo clique ou arraste para o Chrome / Edge.
+        </div>
+
+        <section id="view-dash">
+          <div class="grid cols-3" style="margin-bottom:1rem;">
+            <div class="card"><h3>Oportunidades</h3><div class="big" id="dash-count">0</div></div>
+            <div class="card"><h3>Valor total</h3><div class="big" id="dash-value">R$ 0</div></div>
+            <div class="card"><h3>UF em destaque</h3><div class="big" id="dash-uf">—</div><div class="muted" id="dash-uf-hint"></div></div>
+          </div>
+          <div class="card" style="margin-bottom:1rem;">
+            <h3>Oportunidades por UF</h3>
+            <div class="muted">Clique para filtrar a lista abaixo.</div>
+            <div class="heat" id="dash-heat"></div>
+          </div>
+          <h3 style="margin:0 0 0.75rem;font-size:0.9rem;">Licitações recentes</h3>
+          <div id="dash-list"></div>
+        </section>
+
+        <section id="view-intel" class="hidden">
+          <p class="muted" style="margin-top:0;">Filtro por score mínimo (conformidade técnica simulada).</p>
+          <div class="score-btns" id="intel-scores"></div>
+          <div class="grid cols-3" style="margin:1rem 0;">
+            <div class="card"><h3>Oportunidades</h3><div class="big" id="intel-count">0</div></div>
+            <div class="card"><h3>Valor total</h3><div class="big" id="intel-value">R$ 0</div></div>
+            <div class="card"><h3>UF em destaque</h3><div class="big" id="intel-topuf">—</div></div>
+          </div>
+          <div class="card" style="margin-bottom:1rem;">
+            <h3>Top 5 UFs</h3>
+            <div class="heat" id="intel-top5"></div>
+          </div>
+          <div id="intel-list"></div>
+        </section>
+
+        <section id="view-comp" class="hidden">
+          <div class="filters">
+            <div><label>UF</label><select id="comp-uf"><option value="">Todas</option></select></div>
+            <div><label>&nbsp;</label><label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;"><input type="checkbox" id="comp-me" /> Somente ME/EPP</label></div>
+            <div><label>Taxa vitória mín. (%)</label><input type="number" id="comp-minwr" min="0" max="100" value="0" style="width:5rem;" /></div>
+          </div>
+          <div class="card" style="overflow:auto;">
+            <table><thead><tr>
+              <th>Empresa</th><th>UF</th><th>Perfil</th><th>Partic.</th><th>Vitórias</th><th>Valor ganho</th><th>Win rate</th>
+            </tr></thead><tbody id="comp-tbody"></tbody></table>
+          </div>
+        </section>
+
+        <section id="view-licit" class="hidden">
+          <div class="tabs">
+            <button type="button" class="on" data-tab="all">Todas</button>
+            <button type="button" class="fav-tab" data-tab="fav">Escolhidas ★</button>
+          </div>
+          <div class="filters">
+            <div><label>Busca</label><input type="search" id="licit-q" placeholder="Título ou palavra-chave…" style="min-width:12rem;" /></div>
+            <div><label>Portal</label><select id="licit-portal"><option value="">Todos</option></select></div>
+            <div><label>UF</label><select id="licit-uf"><option value="">Todas</option></select></div>
+          </div>
+          <div id="licit-list"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function () {
+  'use strict';
+  function showBootError(msg) {
+    var el = document.getElementById('boot-error');
+    if (!el) { alert(msg); return; }
+    el.style.display = 'block';
+    el.textContent = msg;
+  }
+  try {
+  var PROCUREMENTS = [
+    { id: '1', title: 'Contratação de SOC e SIEM com monitoramento 24x7', portal: 'Compras.gov.br', uf: 'DF', valueBrl: 2400000, status: 'aberto', deadline: '2026-04-12', keywordsMatched: ['SOC', 'SIEM', 'Monitoramento de Segurança'], technicalScore: 78 },
+    { id: '2', title: 'Manutenção preventiva e corretiva de data center', portal: 'PNCP', uf: 'SP', valueBrl: 890000, status: 'em_andamento', deadline: '2026-03-30', keywordsMatched: ['manutenção preventiva', 'NOC'], technicalScore: 64 },
+    { id: '3', title: 'Serviços de Threat Intelligence e CTI', portal: 'Licitações-e (BB)', uf: 'MG', valueBrl: 1120000, status: 'aberto', deadline: '2026-04-02', keywordsMatched: ['Threat Intelligence', 'CTI'], technicalScore: 92 },
+    { id: '4', title: 'Firewalls de próxima geração e switches core', portal: 'BEC-SP', uf: 'SP', valueBrl: 3200000, status: 'aberto', deadline: '2026-04-20', keywordsMatched: ['firewall', 'switch', 'SOC'], technicalScore: 71 },
+    { id: '5', title: 'MSSP — resposta a incidentes e SOAR', portal: 'Compras MG', uf: 'MG', valueBrl: 560000, status: 'homologado', deadline: '2026-02-15', keywordsMatched: ['MSSP', 'SOAR', 'Resposta a Incidentes'], technicalScore: 88 },
+    { id: '6', title: 'Teste de invasão e gestão de vulnerabilidades', portal: 'Comprasnet BA', uf: 'BA', valueBrl: 420000, status: 'aberto', deadline: '2026-04-08', keywordsMatched: ['pentest', 'gestão de vulnerabilidades'], technicalScore: 59 },
+    { id: '7', title: 'ITSM e service desk corporativo', portal: 'SIAG', uf: 'RJ', valueBrl: 1950000, status: 'aberto', deadline: '2026-05-01', keywordsMatched: ['ITSM', 'service desk', 'BMC'], technicalScore: 83 },
+    { id: '8', title: 'Storage SAN/NAS e backup governamental', portal: 'SEPLAG/MT', uf: 'MT', valueBrl: 520000, status: 'aberto', deadline: '2026-04-18', keywordsMatched: ['storage'], technicalScore: 67 },
+    { id: '9', title: 'Cibersegurança — XDR e EDR em estações', portal: 'Compras.gov.br', uf: 'RS', valueBrl: 780000, status: 'em_andamento', deadline: '2026-04-05', keywordsMatched: ['XDR', 'EDR', 'Cibersegurança'], technicalScore: 74 },
+    { id: '10', title: 'Desenvolvimento de sistemas e fábrica de software', portal: 'PNCP', uf: 'PR', valueBrl: 2100000, status: 'aberto', deadline: '2026-04-25', keywordsMatched: ['desenvolvimento de sistemas', 'fábrica de software'], technicalScore: 81 }
+  ];
+
+  var SUPPLIERS = [
+    { id: 's1', companyName: 'CyberShield Soluções LTDA', cnpjMask: '12.***.***/0001-90', uf: 'SP', isMicroOrSmall: false, participations: 48, wins: 14, totalWonValueBrl: 18400000, winRate: 0.29, recentPortals: ['Compras.gov.br', 'BEC-SP', 'PNCP'] },
+    { id: 's2', companyName: 'ME Tech Segurança ME', cnpjMask: '45.***.***/0001-22', uf: 'DF', isMicroOrSmall: true, participations: 62, wins: 21, totalWonValueBrl: 6200000, winRate: 0.34, recentPortals: ['Compras.gov.br', 'Licitações-e'] },
+    { id: 's3', companyName: 'Norte SOC Serviços EPP', cnpjMask: '78.***.***/0001-55', uf: 'MG', isMicroOrSmall: true, participations: 35, wins: 11, totalWonValueBrl: 4100000, winRate: 0.31, recentPortals: ['Compras MG', 'PNCP'] },
+    { id: 's4', companyName: 'Infra Brasil Integradora LTDA', cnpjMask: '33.***.***/0001-11', uf: 'RJ', isMicroOrSmall: false, participations: 102, wins: 19, totalWonValueBrl: 32800000, winRate: 0.19, recentPortals: ['SIAG', 'Compras.gov.br'] },
+    { id: 's5', companyName: 'PentaSec Consultoria LTDA', cnpjMask: '91.***.***/0001-03', uf: 'BA', isMicroOrSmall: false, participations: 28, wins: 12, totalWonValueBrl: 5600000, winRate: 0.43, recentPortals: ['Comprasnet BA', 'PNCP'] },
+    { id: 's6', companyName: 'CloudWorks EPP', cnpjMask: '56.***.***/0001-77', uf: 'RS', isMicroOrSmall: true, participations: 41, wins: 9, totalWonValueBrl: 2850000, winRate: 0.22, recentPortals: ['Compras.gov.br', 'Compras MG'] }
+  ];
+
+  var SCORES = [60, 70, 80, 90];
+  var FAV_KEY = 'smartia-favoritos';
+  var memFavIds = [];
+  var state = {
+    view: 'dash',
+    dashUf: null,
+    minScore: 60,
+    intelUf: null,
+    licitTab: 'all'
+  };
+
+  function mixHex(a, b, t) {
+    function h(x) { return parseInt(x.slice(1), 16); }
+    var r1 = (h(a) >> 16) & 255, g1 = (h(a) >> 8) & 255, b1 = h(a) & 255;
+    var r2 = (h(b) >> 16) & 255, g2 = (h(b) >> 8) & 255, b2 = h(b) & 255;
+    var k = t / 100;
+    var r = Math.round(r1 + (r2 - r1) * k), g = Math.round(g1 + (g2 - g1) * k), bl = Math.round(b1 + (b2 - b1) * k);
+    return 'rgb(' + r + ',' + g + ',' + bl + ')';
+  }
+  function formatBrl(n) {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(n);
+  }
+  function formatDate(iso) {
+    var d = new Date(iso + 'T12:00:00');
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+  function countByUf(items) {
+    var acc = {};
+    for (var i = 0; i < items.length; i++) {
+      var p = items[i];
+      acc[p.uf] = (acc[p.uf] || 0) + 1;
+    }
+    return acc;
+  }
+  function matchesScore(p, min) {
+    if (p.technicalScore == null) return min <= 60;
+    return p.technicalScore >= min;
+  }
+  function getFavorites() {
+    var o = {};
+    try {
+      var raw = localStorage.getItem(FAV_KEY);
+      if (raw) {
+        var arr = JSON.parse(raw);
+        for (var i = 0; i < arr.length; i++) o[arr[i]] = true;
+        return o;
+      }
+    } catch (e) { /* file:// ou bloqueio */ }
+    for (var j = 0; j < memFavIds.length; j++) o[memFavIds[j]] = true;
+    return o;
+  }
+  function toggleFavorite(id) {
+    var set = {};
+    var arr = [];
+    try {
+      var raw = localStorage.getItem(FAV_KEY);
+      arr = raw ? JSON.parse(raw) : [];
+    } catch (e) { arr = memFavIds.slice(); }
+    for (var i = 0; i < arr.length; i++) set[arr[i]] = true;
+    if (set[id]) delete set[id]; else set[id] = true;
+    var keys = Object.keys(set);
+    memFavIds = keys.slice();
+    try {
+      localStorage.setItem(FAV_KEY, JSON.stringify(keys));
+    } catch (e2) { /* memória só */ }
+    if (state.view === 'dash') renderDash();
+    else if (state.view === 'intel') renderIntel();
+    else if (state.view === 'licit') renderLicit();
+  }
+  function shareText(p) {
+    return [
+      '📋 ' + p.title,
+      'Portal: ' + p.portal,
+      'UF: ' + p.uf,
+      'Valor: ' + formatBrl(p.valueBrl),
+      'Prazo: ' + formatDate(p.deadline),
+      'Score: ' + (p.technicalScore != null ? p.technicalScore + '%' : '—'),
+      '',
+      '— SmartIA (offline)'
+    ].join('\n');
+  }
+  function openWa(p) {
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(shareText(p)), '_blank', 'noopener,noreferrer');
+  }
+  function openTg(p) {
+    window.open('https://t.me/share/url?text=' + encodeURIComponent(shareText(p)), '_blank', 'noopener,noreferrer');
+  }
+
+  function renderProcCard(p, opts) {
+    opts = opts || {};
+    var fav = getFavorites()[p.id];
+    var star = opts.showStar ? '<button type="button" class="btn" data-fav="' + p.id + '" title="Escolhida">' + (fav ? '★' : '☆') + '</button> ' : '';
+    var kw = p.keywordsMatched.map(function (k) { return '<span>' + escapeHtml(k) + '</span>'; }).join('');
+    return (
+      '<div class="proc">' +
+        '<h4>' + star + escapeHtml(p.title) + '</h4>' +
+        '<div class="meta">' + escapeHtml(p.portal) + ' · ' + escapeHtml(p.uf) +
+        (p.technicalScore != null ? ' · <strong style="color:var(--accent)">' + p.technicalScore + '% conf.</strong>' : '') +
+        '</div>' +
+        '<div class="tags">' + kw + '</div>' +
+        '<div class="meta">' + formatBrl(p.valueBrl) + ' · Prazo ' + formatDate(p.deadline) + '</div>' +
+        '<div class="row">' +
+        '<button type="button" class="btn btn-primary" data-wa="' + p.id + '">WhatsApp</button>' +
+        '<button type="button" class="btn" data-tg="' + p.id + '">Telegram</button>' +
+        '</div></div>'
+    );
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function procById(id) {
+    for (var i = 0; i < PROCUREMENTS.length; i++) if (PROCUREMENTS[i].id === id) return PROCUREMENTS[i];
+    return null;
+  }
+
+  function renderDash() {
+    var base = PROCUREMENTS.filter(function (p) { return p.keywordsMatched && p.keywordsMatched.length; });
+    var filtered = state.dashUf ? base.filter(function (p) { return p.uf === state.dashUf; }) : base;
+    var counts = countByUf(base);
+    var max = 1;
+    Object.keys(counts).forEach(function (k) { if (counts[k] > max) max = counts[k]; });
+    var totalVal = filtered.reduce(function (s, p) { return s + p.valueBrl; }, 0);
+    var top = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; })[0];
+
+    document.getElementById('dash-count').textContent = String(filtered.length);
+    document.getElementById('dash-value').textContent = formatBrl(totalVal);
+    document.getElementById('dash-uf').textContent = top || '—';
+    document.getElementById('dash-uf-hint').textContent = top ? counts[top] + ' oportunidade(s) no total' : '';
+
+    var heatEl = document.getElementById('dash-heat');
+    heatEl.innerHTML = '';
+    Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).forEach(function (uf) {
+      var n = counts[uf];
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = uf + '\n' + n;
+      btn.style.whiteSpace = 'pre';
+      var pct = Math.round((n / max) * 100);
+      btn.style.background = mixHex('#0d9488', '#132a45', pct);
+      if (state.dashUf === uf) btn.className = 'on';
+      btn.addEventListener('click', function () {
+        state.dashUf = state.dashUf === uf ? null : uf;
+        renderDash();
+      });
+      heatEl.appendChild(btn);
+    });
+
+    var listEl = document.getElementById('dash-list');
+    listEl.innerHTML = filtered.slice(0, 6).map(function (p) { return renderProcCard(p, { showStar: true }); }).join('');
+    bindProcButtons(listEl);
+  }
+
+  function renderIntel() {
+    var byScore = PROCUREMENTS.filter(function (p) { return matchesScore(p, state.minScore); });
+    var filtered = state.intelUf ? byScore.filter(function (p) { return p.uf === state.intelUf; }) : byScore;
+    var counts = countByUf(byScore);
+    var top5 = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 5);
+    var totalVal = byScore.reduce(function (s, p) { return s + p.valueBrl; }, 0);
+    var highlight = top5[0];
+
+    document.getElementById('intel-count').textContent = String(byScore.length);
+    document.getElementById('intel-value').textContent = formatBrl(totalVal);
+    document.getElementById('intel-topuf').textContent = highlight || '—';
+
+    var scoreEl = document.getElementById('intel-scores');
+    scoreEl.innerHTML = SCORES.map(function (n) {
+      return '<button type="button" class="' + (state.minScore === n ? 'on' : '') + '" data-score="' + n + '">' + n + '%</button>';
+    }).join(' ');
+
+    var medals = ['🥇', '🥈', '🥉', '4º', '5º'];
+    var top5El = document.getElementById('intel-top5');
+    top5El.innerHTML = '';
+    top5.forEach(function (uf, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = medals[i] + ' ' + uf + ' (' + counts[uf] + ')';
+      if (state.intelUf === uf) btn.className = 'on';
+      btn.addEventListener('click', function () {
+        state.intelUf = state.intelUf === uf ? null : uf;
+        renderIntel();
+      });
+      top5El.appendChild(btn);
+    });
+
+    var listEl = document.getElementById('intel-list');
+    listEl.innerHTML = filtered.map(function (p) { return renderProcCard(p, { showStar: true }); }).join('');
+    bindProcButtons(listEl);
+  }
+
+  function renderComp() {
+    var uf = document.getElementById('comp-uf').value;
+    var onlyMe = document.getElementById('comp-me').checked;
+    var minWr = parseFloat(document.getElementById('comp-minwr').value) || 0;
+    var rows = SUPPLIERS.filter(function (s) {
+      if (uf && s.uf !== uf) return false;
+      if (onlyMe && !s.isMicroOrSmall) return false;
+      if (s.winRate * 100 < minWr) return false;
+      return true;
+    });
+
+    var tbody = document.getElementById('comp-tbody');
+    tbody.innerHTML = rows.map(function (s) {
+      return '<tr><td><strong>' + escapeHtml(s.companyName) + '</strong><br><span class="muted">CNPJ ' + escapeHtml(s.cnpjMask) + '</span></td>' +
+        '<td>' + escapeHtml(s.uf) + '</td>' +
+        '<td>' + (s.isMicroOrSmall ? '<span class="badge">ME/EPP</span>' : '—') + '</td>' +
+        '<td>' + s.participations + '</td><td>' + s.wins + '</td>' +
+        '<td>' + formatBrl(s.totalWonValueBrl) + '</td>' +
+        '<td>' + Math.round(s.winRate * 100) + '%</td></tr>';
+    }).join('');
+  }
+
+  function renderLicit() {
+    var q = document.getElementById('licit-q').value.trim().toLowerCase();
+    var portal = document.getElementById('licit-portal').value;
+    var uf = document.getElementById('licit-uf').value;
+    var favs = getFavorites();
+
+    var filtered = PROCUREMENTS.filter(function (p) {
+      if (state.licitTab === 'fav' && !favs[p.id]) return false;
+      if (portal && p.portal !== portal) return false;
+      if (uf && p.uf !== uf) return false;
+      if (q) {
+        var blob = (p.title + ' ' + p.keywordsMatched.join(' ') + ' ' + p.portal).toLowerCase();
+        if (blob.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+
+    var listEl = document.getElementById('licit-list');
+    listEl.innerHTML = filtered.map(function (p) { return renderProcCard(p, { showStar: true }); }).join('');
+    bindProcButtons(listEl);
+  }
+
+  function eachNode(list, fn) {
+    for (var i = 0; i < list.length; i++) fn(list[i]);
+  }
+  function bindProcButtons(container) {
+    eachNode(container.querySelectorAll('[data-wa]'), function (btn) {
+      btn.addEventListener('click', function () { openWa(procById(btn.getAttribute('data-wa'))); });
+    });
+    eachNode(container.querySelectorAll('[data-tg]'), function (btn) {
+      btn.addEventListener('click', function () { openTg(procById(btn.getAttribute('data-tg'))); });
+    });
+    eachNode(container.querySelectorAll('[data-fav]'), function (btn) {
+      btn.addEventListener('click', function () { toggleFavorite(btn.getAttribute('data-fav')); });
+    });
+  }
+
+  var titles = {
+    dash: ['Dashboard', 'Resumo e oportunidades (dados de exemplo).'],
+    intel: ['Mapa da Inteligência', 'Filtro por score e destaque por UF.'],
+    comp: ['Mapa de Competitividade', 'Fornecedores, ME/EPP e taxa de vitória (simulado).'],
+    licit: ['Licitações', 'Busca, escolhidas e compartilhamento.']
+  };
+
+  function showView(name) {
+    state.view = name;
+    document.querySelectorAll('nav button').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-view') === name);
+    });
+    document.getElementById('view-dash').classList.toggle('hidden', name !== 'dash');
+    document.getElementById('view-intel').classList.toggle('hidden', name !== 'intel');
+    document.getElementById('view-comp').classList.toggle('hidden', name !== 'comp');
+    document.getElementById('view-licit').classList.toggle('hidden', name !== 'licit');
+    document.getElementById('page-title').textContent = titles[name][0];
+    document.getElementById('page-desc').textContent = titles[name][1];
+    if (name === 'dash') renderDash();
+    if (name === 'intel') renderIntel();
+    if (name === 'comp') renderComp();
+    if (name === 'licit') renderLicit();
+  }
+
+  eachNode(document.querySelectorAll('nav button'), function (b) {
+    b.addEventListener('click', function () { showView(b.getAttribute('data-view')); });
+  });
+
+  document.getElementById('intel-scores').addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.getAttribute('data-score')) {
+      state.minScore = parseInt(t.getAttribute('data-score'), 10);
+      state.intelUf = null;
+      renderIntel();
+    }
+  });
+
+  ['comp-uf', 'comp-me', 'comp-minwr'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', renderComp);
+    document.getElementById(id).addEventListener('input', renderComp);
+  });
+
+  eachNode(document.querySelectorAll('#view-licit .tabs button'), function (btn) {
+    btn.addEventListener('click', function () {
+      state.licitTab = btn.getAttribute('data-tab');
+      eachNode(document.querySelectorAll('#view-licit .tabs button'), function (x) {
+        x.classList.toggle('on', x === btn);
+      });
+      renderLicit();
+    });
+  });
+
+  ['licit-q', 'licit-portal', 'licit-uf'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', renderLicit);
+    document.getElementById(id).addEventListener('change', renderLicit);
+  });
+
+  var portals = {};
+  var ufs = {};
+  PROCUREMENTS.forEach(function (p) { portals[p.portal] = true; ufs[p.uf] = true; });
+  var ps = document.getElementById('licit-portal');
+  var us = document.getElementById('licit-uf');
+  var cu = document.getElementById('comp-uf');
+  Object.keys(portals).sort().forEach(function (p) {
+    var o = document.createElement('option');
+    o.value = p;
+    o.textContent = p;
+    ps.appendChild(o);
+  });
+  Object.keys(ufs).sort().forEach(function (u) {
+    var o = document.createElement('option');
+    o.value = u;
+    o.textContent = u;
+    us.appendChild(o);
+    var o2 = document.createElement('option');
+    o2.value = u;
+    o2.textContent = u;
+    cu.appendChild(o2);
+  });
+
+  renderDash();
+  } catch (err) {
+    showBootError('O portal nao carregou. Detalhe: ' + (err && err.message ? err.message : String(err)) + ' — Tente abrir com Microsoft Edge ou use ABRIR-SERVIDOR-LOCAL.bat');
+  }
+})();
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0b1628;
+  --sidebar: #0f2137;
+  --surface: #132a45;
+  --surface-hover: #1a3554;
+  --header-bg: #0f2137;
+  --border: #1e3a5f;
+  --text: #e8f4f8;
+  --muted: #8ba3b8;
+  --accent: #2dd4bf;
+  --accent-dim: #115e59;
+  --accent-muted: rgba(45, 212, 191, 0.12);
+  --heat: #0d9488;
+  --ring: #5eead4;
+  --nav-active-bg: rgba(45, 212, 191, 0.18);
+  --nav-active-fg: #ccfbf1;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}

@@ -1,0 +1,3 @@
+/api-pncp/*  https://pncp.gov.br/:splat  200
+/api-transparencia/* https://api.portaldatransparencia.gov.br/:splat 200
+/* /index.html 200

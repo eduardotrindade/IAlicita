@@ -1,0 +1,60 @@
+SmartIA — como rodar o projeto
+===============================
+
+FORMA MAIS SIMPLES (SEM NODE, SEM NPM)
+---------------------------------------
+1) Duplo clique no arquivo:
+      smartia-portal-offline.html
+2) Abre no navegador (Chrome ou Edge). Pronto.
+   — Nao precisa instalar nada.
+   — Nao use "npm" para esta versao.
+
+Se o Windows perguntir com qual programa abrir, escolha Chrome ou Edge.
+
+IMPORTANTE (projeto React / Vite)
+---------------------------------
+O Vite NAO funciona se voce abrir o index.html da raiz com duplo clique (file://).
+E preciso rodar o servidor com npm (ou o script abrir-app).
+
+Forma mais simples (Windows)
+------------------------------
+1) Duplo clique em: abrir-app.cmd
+   OU
+2) Duplo clique em: rodar-dev.bat
+
+Se o navegador nao abrir sozinho, acesse manualmente:
+   http://127.0.0.1:5173
+
+Se aparecer "nao e possivel acessar esta pagina":
+- Confira se o terminal nao mostrou erro em vermelho.
+- Tente outra porta: o Vite pode usar 5174 se 5173 estiver ocupada — veja a URL no terminal.
+
+Terminal (PowerShell ou CMD)
+----------------------------
+cd "pasta-do-projeto"
+"%ProgramFiles%\nodejs\npm.cmd" install
+"%ProgramFiles%\nodejs\npm.cmd" run dev
+
+Versao pronta para testar (sem servidor de desenvolvimento)
+-----------------------------------------------------------
+npm run build
+npm run preview
+Acesse: http://127.0.0.1:4173
+
+Se "npm" nao for reconhecido
+----------------------------
+- Feche e reabra o PowerShell / CMD / Cursor, OU
+- Use abrir-app.cmd (usa o caminho completo do Node em Program Files).
+
+OneDrive
+--------
+Se o npm install falhar ou travar, copie a pasta do projeto para algo como
+C:\dev\SmartIA e tente de novo.
+
+Projeto Python (Flask + servidor minimo)
+----------------------------------------
+Pasta: portal_python
+- Leia: portal_python\INICIAR_PYTHON.txt
+- Duplo clique: portal_python\run.bat  (Flask + venv)
+- Ou: portal_python\run_sem_pip.bat  (sem instalar pacotes)
+Abre: http://127.0.0.1:8765/

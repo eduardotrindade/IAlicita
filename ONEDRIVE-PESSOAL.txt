@@ -1,0 +1,52 @@
+SmartIA — usar no OneDrive Pessoal
+==================================
+
+Por que mudar?
+--------------
+O OneDrive da empresa (IT2B) as vezes bloqueia scripts, sincroniza errado ou
+deixa arquivos "so na nuvem". No OneDrive Pessoal voce costuma ter mais controle.
+
+Passo a passo (manual)
+----------------------
+1) Abra o Explorador de Arquivos.
+
+2) No painel esquerdo, clique em "OneDrive - Pessoal" ou apenas "OneDrive"
+   (o da sua conta Microsoft pessoal, NAO o da empresa).
+
+3) Crie uma pasta, por exemplo:  Documentos\SmartIA
+   (ou arraste a pasta SmartIA inteira para dentro do OneDrive Pessoal.)
+
+4) Copie TUDO que esta na pasta SmartIA do trabalho para essa nova pasta
+   (Ctrl+A, Ctrl+C, Ctrl+V). Ou use o script abaixo.
+
+5) IMPORTANTE — evitar arquivo "fantasma":
+   Botao direito na pasta SmartIA (no OneDrive Pessoal) >
+   "Manter sempre neste dispositivo" / "Always keep on this device".
+   Assim o Windows baixa os arquivos de verdade e o .html / .vbs abre certo.
+
+6) Abra a pasta no OneDrive Pessoal e teste:
+   - Duplo clique em  ABRIR-PORTAL.vbs
+   - Ou duplo clique em  smartia-portal-offline.html
+
+7) Se quiser o servidor Python, entre na pasta portal_python e use run.bat
+   (Python precisa estar instalado no PC em qualquer pasta).
+
+Passo a passo (automatico)
+--------------------------
+Duplo clique em:  copiar-para-onedrive-pessoal.bat
+
+O script agora:
+- Procura OneDrive nas variaveis de ambiente (OneDriveConsumer, etc.) e no Registro do Windows
+- Se nao achar NADA, abre uma JANELA para voce escolher a pasta (ex.: seu OneDrive Pessoal)
+- Copia com robocopy (mais confiavel). Ignora node_modules e .venv para nao travar.
+- Grava um log na Area de Trabalho:  SmartIA-copia-log.txt
+
+Se ainda falhar, abra esse arquivo .txt e veja a mensagem de erro.
+
+Onde costuma ficar o OneDrive Pessoal no Windows
+-------------------------------------------------
+Exemplos (o seu usuario pode ser outro nome):
+  C:\Users\SEU_USUARIO\OneDrive
+  C:\Users\SEU_USUARIO\OneDrive - Pessoal
+
+Se tiver dois OneDrive (empresa + pessoal), use SEMPRE o da conta pessoal.

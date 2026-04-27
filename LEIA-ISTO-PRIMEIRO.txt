@@ -1,0 +1,24 @@
+SmartIA — se "nao funcionou", siga NESTA ORDEM
+===============================================
+
+1) ABRIR-SERVIDOR-LOCAL.bat  (duplo clique)
+   - Abre o portal em http://127.0.0.1:8765
+   - NAO precisa Node.js nem npm.
+   - Deixe a janela PRETA aberta enquanto usar o site.
+   - Se aparecer erro de "permissao" ou "acesso negado", abra o PowerShell
+     como Administrador UMA VEZ e rode:
+       netsh http add urlacl url=http://127.0.0.1:8765/ user=Everyone
+     Depois tente de novo o passo 1.
+
+2) ABRIR-NO-EDGE.bat  (duplo clique)
+   - Abre o arquivo smartia-portal-offline.html direto no Microsoft Edge.
+   - Use se o passo 1 nao puder rodar.
+
+3) OneDrive
+   - Se o arquivo estiver "na nuvem" e nao baixado, o Windows pode abrir vazio.
+   - Clique com o botao direito na pasta SmartIA > "Manter sempre neste dispositivo".
+   - Ou copie a pasta inteira para C:\SmartIA e abra de la.
+
+4) Projeto React (npm)
+   - So use se o Node.js estiver instalado: npm install && npm run dev
+   - O index.html da RAIZ nao funciona com duplo clique — precisa do comando acima.

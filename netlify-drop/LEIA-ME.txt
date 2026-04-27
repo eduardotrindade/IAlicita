@@ -1,0 +1,18 @@
+PUBLICAR NA INTERNET (sem instalar nada no seu PC)
+==================================================
+
+1) Feche este arquivo.
+
+2) Comprima esta pasta "netlify-drop" em um arquivo ZIP
+   (botao direito na pasta > Enviar para > Pasta compactada).
+
+3) Abra no navegador:  https://app.netlify.com/drop
+   (site oficial do Netlify — nao precisa criar conta para testar.)
+
+4) Arraste o ZIP para a area indicada na pagina.
+
+5) Em alguns segundos aparecera um LINK (https://....netlify.app).
+   Esse link abre o SmartIA em qualquer computador ou celular.
+
+Se o site Netlify nao abrir na empresa (firewall), use outra rede
+(ex.: 4G do celular) ou peca ao TI uma excecao.

@@ -1,0 +1,30 @@
+SmartIA — projeto Python
+========================
+
+Requisito: Python 3.10+ (https://www.python.org/downloads/)
+Na instalacao, marque "Add python.exe to PATH".
+
+--- Opcao A — Flask (recomendado) ---
+Duplo clique em: run.bat
+- Cria a pasta .venv, instala Flask e abre http://127.0.0.1:8765/
+
+Manualmente (PowerShell ou CMD), na pasta portal_python:
+  python -m venv .venv
+  .venv\Scripts\activate
+  pip install -r requirements.txt
+  python app.py
+
+--- Opcao B — Sem instalar nada com pip ---
+Duplo clique em: run_sem_pip.bat
+- Usa apenas a biblioteca padrao (servidor_minimo.py)
+- Tambem abre http://127.0.0.1:8765/
+
+Manualmente, na pasta portal_python:
+  python servidor_minimo.py
+
+--- Arquivos ---
+- app.py              : servidor Flask
+- servidor_minimo.py  : HTTP simples (stdlib)
+- smartia-portal-offline.html fica na pasta PAI (SmartIA), nao dentro de portal_python.
+
+Se a pagina nao abrir, digite no navegador: http://127.0.0.1:8765/
