@@ -1,0 +1,32 @@
+=========================================
+HISTORICO - SmartIA
+=========================================
+
+01/05/2026 - CONFIGURACAO GIT E CI/CD
+------------------------------------
+- Iniciado repositorio Git local
+- Criado .gitignore personalizado
+- Criado Dockerfile para deploy
+- Criado workflow CI/CD (.github/workflows/ci-cd.yml)
+- Commit inicial: 85 arquivos, 8963 linhas
+- Criado repositorio no GitHub: eduardotrindade/IAlicita
+- Push para GitHub concluído
+
+- Tentativa Netlify (nao funcionou - credits esgotados)
+- Configurado Vercel como alternativa
+- Criado vercel.json para deploy automatico
+- Atualizado workflow para Vercel
+
+ARQUIVOS CRIADOS/ATUALIZADOS:
+- .gitignore
+- Dockerfile
+- .github/workflows/ci-cd.yml
+- netlify.toml (temporario)
+- vercel.json
+
+PROXIMOS PASSOS:
+- Conectar repositorio ao Vercel
+- Configurar secrets no GitHub para deploy automatico
+- Testar deploy com push
+
+=========================================
