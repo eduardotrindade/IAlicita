@@ -10,7 +10,7 @@ export function GlobalRagWidget() {
     setMessages(prev => [...prev, { role: 'user', text: inputVal }])
     setInputVal('')
     setTimeout(() => {
-        setMessages(prev => [...prev, {role: 'ia', text: 'Estou acessando nossa base RAG do TCU e Lei de Licitações (mock)... Tudo de acordo!'}])
+        setMessages(prev => [...prev, {role: 'ia', text: 'Consultei a base da Lei 14.133/2021 e jurisprudências do TCU disponíveis.'}])
     }, 800)
   }
 

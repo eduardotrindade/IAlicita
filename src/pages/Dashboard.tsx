@@ -1,34 +1,48 @@
-import { useMemo, useState } from 'react'
-import { MOCK_PROCUREMENTS, countByUf } from '../data/mockData'
+import { useMemo, useState, useEffect } from 'react'
+import { searchPncp } from '../services/pncpApi'
+import { countByUf } from '../data/mockData'
 import { formatBrl } from '../utils/format'
 import { StatCard } from '../components/StatCard'
 import { UfHeatStrip } from '../components/UfHeatStrip'
 import { ProcurementCard } from '../components/ProcurementCard'
-
-const RECENT = [...MOCK_PROCUREMENTS].sort(
-  (a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime(),
-)
+import type { Procurement } from '../types'
 
 export function Dashboard() {
   const [uf, setUf] = useState<string | null>(null)
+  const [data, setData] = useState<Procurement[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    searchPncp({ q: 'tecnologia', tam_pagina: 40 }).then((items) => {
+      setData(items)
+      setLoading(false)
+    })
+  }, [])
 
   const filtered = useMemo(() => {
-    const base = RECENT.filter((p) => p.keywordsMatched.length > 0)
+    const base = data.filter((p) => p.keywordsMatched.length > 0)
     if (!uf) return base
     return base.filter((p) => p.uf === uf)
-  }, [uf])
+  }, [data, uf])
 
   const totalValue = filtered.reduce((s, p) => s + p.valueBrl, 0)
   const counts = countByUf(filtered)
   const topUf = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-[var(--muted)] animate-pulse">Carregando dados da PNCP...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8">
       <section>
         <h2 className="text-base font-semibold text-[var(--text)]">Dashboard</h2>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Resumo das oportunidades aderentes às palavras-chave de TI e segurança
-          (dados mock).
+          Oportunidades reais do Portal Nacional de Contratações Públicas.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <StatCard label="Oportunidades (filtrado)" value={String(filtered.length)} />
@@ -46,14 +60,14 @@ export function Dashboard() {
       </section>
 
       <UfHeatStrip
-        items={RECENT.filter((p) => p.keywordsMatched.length > 0)}
+        items={data}
         selectedUf={uf}
         onSelectUf={setUf}
       />
 
       <section>
         <h3 className="text-sm font-semibold text-[var(--text)]">
-          Licitações recentes (palavras-chave)
+          Licitações recentes
         </h3>
         <p className="mt-1 text-xs text-[var(--muted)]">
           Use os botões WhatsApp e Telegram em cada card para enviar o resumo da

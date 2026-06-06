@@ -13,7 +13,7 @@ export function PesquisaPrecos() {
         </div>
         
         <div className="col-span-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-          <h3 className="font-semibold text-sm text-[var(--text)] mb-4">Média de Mercado (Mock: Painel de Preços gov.br)</h3>
+          <h3 className="font-semibold text-sm text-[var(--text)] mb-4">Média de Mercado (Painel de Preços gov.br)</h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-[var(--surface-hover)] p-3 rounded-lg text-center">
               <p className="text-xs text-[var(--muted)]">Menor Preço</p>

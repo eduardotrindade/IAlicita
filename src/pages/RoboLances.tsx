@@ -33,7 +33,7 @@ export function RoboLances() {
         </div>
 
         <div className="rounded border border-green-500 bg-green-50 dark:bg-green-900/10 p-5 shadow-sm text-center flex flex-col justify-center">
-           <p className="text-green-800 dark:text-green-300 font-bold mb-2">STATUS: ROBÔ ATIVO MOCK</p>
+           <p className="text-green-800 dark:text-green-300 font-bold mb-2">STATUS: ROBÔ ATIVO (SIMULAÇÃO)</p>
            <p className="text-xs text-green-700 dark:text-green-400 mb-4 text-left">
              O Agente está conectado ao Pregão 012/2026 (Ministério Público). Ele calculará lances otimizados baseado nos oponentes.
            </p>

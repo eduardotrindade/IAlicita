@@ -1,76 +1,62 @@
-import { useMemo, useState, useEffect } from 'react'
-import { MOCK_PROCUREMENTS } from '../data/mockData'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import { useFavoriteIds } from '../hooks/useFavoriteIds'
 import { ProcurementCard } from '../components/ProcurementCard'
-import { searchPncp, PncpItem } from '../services/pncpApi'
+import { searchPncp } from '../services/pncpApi'
+import type { Procurement } from '../types'
 
 export function Licitacoes() {
   const { toggle, isFavorite } = useFavoriteIds()
   const [q, setQ] = useState('')
   const [portal, setPortal] = useState('')
   const [uf, setUf] = useState('')
-  const [tab, setTab] = useState<'todas' | 'escolhidas' | 'pncp_vivo'>('todas')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [pncpData, setPncpData] = useState<any[]>([])
-  const [loadingPncp, setLoadingPncp] = useState(false)
+  const [tab, setTab] = useState<'todas' | 'escolhidas'>('todas')
+  const [data, setData] = useState<Procurement[]>([])
+  const [loading, setLoading] = useState(true)
 
-  // Efeito disparado na aba do PNCP
+  const fetchData = useCallback(async (query: string) => {
+    setLoading(true)
+    const items = await searchPncp({ q: query || 'software', tam_pagina: 30 })
+    setData(items)
+    setLoading(false)
+  }, [])
+
   useEffect(() => {
-    if (tab === 'pncp_vivo') {
-      const delay = setTimeout(() => {
-        setLoadingPncp(true)
-        searchPncp(q).then((items) => {
-          const adapted = items.map((i: PncpItem) => ({
-             id: i.id || String(Math.random()),
-             title: i.objetoCompra || 'Edital Governo Federal',
-             portal: 'Compras.gov/PNCP',
-             uf: 'BR',
-             publishedAt: i.dataPublicacaoPncp?.split('T')[0] || 'Recente',
-             closeAt: i.modalidadeNome || 'Consulta',
-             value: i.valorTotalEstimado || 0,
-             valueBrl: `R$ ${i.valorTotalEstimado || 0}`,
-             status: 'Em Aberto',
-             deadline: 'Ver edital',
-             keywordsMatched: ['Ao Vivo', i.orgaoEntidade?.nome || '']
-          }))
-          setPncpData(adapted)
-        }).finally(() => setLoadingPncp(false))
-      }, 600)
-      return () => clearTimeout(delay)
-    }
-  }, [tab, q])
+    const delay = setTimeout(() => fetchData(q), 600)
+    return () => clearTimeout(delay)
+  }, [q, fetchData])
 
   const portals = useMemo(() => {
-    const s = new Set(MOCK_PROCUREMENTS.map((p) => p.portal))
+    const s = new Set(data.map((p) => p.portal).filter(Boolean))
     return [...s].sort()
-  }, [])
+  }, [data])
 
   const ufs = useMemo(() => {
-    const s = new Set(MOCK_PROCUREMENTS.map((p) => p.uf))
+    const s = new Set(data.map((p) => p.uf).filter(Boolean))
     return [...s].sort()
-  }, [])
+  }, [data])
 
   const filtered = useMemo(() => {
     const qq = q.trim().toLowerCase()
-    return MOCK_PROCUREMENTS.filter((p) => {
+    return data.filter((p) => {
       if (tab === 'escolhidas' && !isFavorite(p.id)) return false
       if (portal && p.portal !== portal) return false
       if (uf && p.uf !== uf) return false
       if (qq) {
-        const blob = `${p.title} ${p.keywordsMatched.join(' ')} ${p.portal}`.toLowerCase()
+        const blob = `${p.title} ${p.keywordsMatched.join(' ')} ${p.portal} ${p.orgao || ''}`.toLowerCase()
         if (!blob.includes(qq)) return false
       }
       return true
     })
-  }, [q, portal, uf, tab, isFavorite])
+  }, [data, q, portal, uf, tab, isFavorite])
 
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-base font-semibold text-[var(--text)]">Buscas</h2>
+        <h2 className="text-base font-semibold text-[var(--text)]">
+          Buscas <span className="text-xs font-normal text-[var(--muted)]">PNCP (Ao Vivo)</span>
+        </h2>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Busque licitações e oportunidades, marque as escolhidas e compartilhe por
-          WhatsApp ou Telegram.
+          Resultados reais da API do Portal Nacional de Contratações Públicas.
         </p>
       </div>
 
@@ -96,17 +82,6 @@ export function Licitacoes() {
           onClick={() => setTab('escolhidas')}
         >
           Escolhidas ★
-        </button>
-        <button
-          type="button"
-          className={`border-b-2 px-3 py-2 text-sm font-bold ${
-            tab === 'pncp_vivo'
-              ? 'border-red-500 text-red-500 animate-pulse'
-              : 'border-transparent text-[var(--muted)] hover:text-red-400'
-          }`}
-          onClick={() => setTab('pncp_vivo')}
-        >
-          PNCP (Ao Vivo) 🔴
         </button>
       </div>
 
@@ -154,12 +129,12 @@ export function Licitacoes() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {loadingPncp ? (
-           <div className="p-8 text-center text-[var(--brand)] animate-pulse col-span-2">
-             Buscando na API do Governo Federal (PNCP) em {import.meta.env.VITE_PNCP_BASE_URL}...
-           </div>
+        {loading ? (
+          <div className="p-8 text-center text-[var(--brand)] animate-pulse col-span-2">
+            Buscando na API do Governo Federal (PNCP)...
+          </div>
         ) : (
-          (tab === 'pncp_vivo' ? pncpData : filtered).map((p) => (
+          filtered.map((p) => (
             <ProcurementCard
               key={p.id}
               procurement={p}
@@ -171,9 +146,9 @@ export function Licitacoes() {
         )}
       </div>
 
-      {!loadingPncp && (tab === 'pncp_vivo' ? pncpData : filtered).length === 0 ? (
+      {!loading && filtered.length === 0 ? (
         <p className="text-sm text-[var(--muted)]">
-          Nenhum resultado. Ajuste os filtros ou aguarde a conexão.
+          Nenhum resultado encontrado na PNCP. Tente outros termos de busca.
         </p>
       ) : null}
     </div>

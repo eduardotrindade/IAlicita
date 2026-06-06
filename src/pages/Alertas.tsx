@@ -4,7 +4,7 @@ export function Alertas() {
   return (
     <div className="space-y-8">
       <header>
-        <h2 className="text-base font-semibold text-[var(--text)]">Meus Alertas MOCK</h2>
+        <h2 className="text-base font-semibold text-[var(--text)]">Meus Alertas</h2>
         <p className="mt-1 text-sm text-[var(--muted)]">
           Receba notificações push ou por e-mail/WhatsApp quando uma licitação aderente for postada.
         </p>

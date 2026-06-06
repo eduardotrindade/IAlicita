@@ -1,22 +1,27 @@
-import { useMemo, useState } from 'react'
-import {
-  MOCK_PROCUREMENTS,
-  SCORE_BANDS,
-  countByUf,
-  procurementMatchesScore,
-} from '../data/mockData'
+import { useMemo, useState, useEffect } from 'react'
+import { searchPncp } from '../services/pncpApi'
+import { countByUf } from '../data/mockData'
 import { formatBrl } from '../utils/format'
 import { StatCard } from '../components/StatCard'
 import { ProcurementCard } from '../components/ProcurementCard'
+import type { Procurement } from '../types'
+
+const SCORE_BANDS = [60, 70, 80, 90]
 
 export function MapaInteligencia() {
   const [minScore, setMinScore] = useState<number>(60)
   const [selectedTopUf, setSelectedTopUf] = useState<string | null>(null)
+  const [data, setData] = useState<Procurement[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const byScore = useMemo(
-    () => MOCK_PROCUREMENTS.filter((p) => procurementMatchesScore(p, minScore)),
-    [minScore],
-  )
+  useEffect(() => {
+    searchPncp({ q: 'tecnologia', tam_pagina: 50 }).then((items) => {
+      setData(items)
+      setLoading(false)
+    })
+  }, [])
+
+  const byScore = useMemo(() => data, [data])
 
   const counts = countByUf(byScore)
   const top5 = Object.entries(counts)
@@ -33,18 +38,25 @@ export function MapaInteligencia() {
 
   const medals = ['🥇', '🥈', '🥉', '4º', '5º']
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-[var(--muted)] animate-pulse">Carregando dados da PNCP...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-base font-semibold text-[var(--text)]">Mapas UF</h2>
         <p className="mt-1 text-sm text-[var(--muted)]">
-          Filtre certames pelo score mínimo de conformidade técnica (após análise
-          das especificações vs. produto).
+          Distribuição geográfica das oportunidades da PNCP.
         </p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-medium text-[var(--muted)]">Score mínimo:</span>
+        <span className="text-xs font-medium text-[var(--muted)]">Filtrar por UF:</span>
         {SCORE_BANDS.map((n) => (
           <button
             key={n}
@@ -56,13 +68,13 @@ export function MapaInteligencia() {
                 : 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:border-[var(--accent-dim)]'
             }`}
           >
-            {n}%
+            Top {n}%
           </button>
         ))}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Oportunidades (score)" value={String(byScore.length)} />
+        <StatCard label="Oportunidades" value={String(byScore.length)} />
         <StatCard
           label="Valor total dos certames"
           value={formatBrl(totalValue)}
@@ -73,7 +85,7 @@ export function MapaInteligencia() {
           hint={
             highlight
               ? `${highlight[1]} certame(s) neste recorte`
-              : 'Ajuste o score'
+              : 'Ajuste o filtro'
           }
         />
       </div>
@@ -126,7 +138,7 @@ export function MapaInteligencia() {
         </div>
         {list.length === 0 ? (
           <p className="mt-4 text-sm text-[var(--muted)]">
-            Nenhuma licitação atende a este score mínimo nos dados de exemplo.
+            Nenhuma licitação encontrada para este filtro.
           </p>
         ) : null}
       </section>

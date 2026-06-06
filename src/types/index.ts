@@ -17,12 +17,17 @@ export interface Procurement {
   keywordsMatched: string[]
   technicalScore?: number
   favored?: boolean
+  orgao?: string
+  unidade?: string
+  modalidade?: string
+  situacao?: string
+  dataPublicacao?: string
 }
 
 export interface Supplier {
   id: string
   companyName: string
-  cnpjMask: string
+  cnpj: string
   uf: string
   isMicroOrSmall: boolean
   participations: number
@@ -31,4 +36,28 @@ export interface Supplier {
   avgTicketBrl: number
   winRate: number
   recentPortals: string[]
+}
+
+export interface CnpjData {
+  cnpj: string
+  nome: string
+  fantasia: string
+  situacao: string
+  abertura: string
+  tipo: string
+  porte: string
+  natureza_juridica: string
+  atividade_principal: { code: string; text: string }
+  atividades_secundarias: { code: string; text: string }[]
+  qsa: { nome: string; qual: string }[]
+  endereco: {
+    logradouro: string
+    numero: string
+    complemento: string
+    bairro: string
+    municipio: string
+    uf: string
+    cep: string
+  }
+  contato: { email: string; telefone: string }
 }
