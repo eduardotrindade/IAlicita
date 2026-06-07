@@ -1,60 +1,94 @@
+import { useState, useEffect } from 'react'
+import { searchPncp } from '../services/pncpApi'
+import { formatBrl } from '../utils/format'
+import type { Procurement } from '../types'
+
 export function SalaOperacoes() {
-  const PREGOES_HOJE = [
-    { id: 'Pregão 012/2026', orgao: 'Ministério Público', status: 'Em Disputa (Lances Aberto)', concorrentes: 4, meuLance: 'R$ 84.000', menorLance: 'R$ 81.500 (Empresa X)' },
-    { id: 'Pregão 088/2026', orgao: 'TRT da 5ª Região', status: 'Aguardando Início', concorrentes: 3, meuLance: '-', menorLance: '-' },
-  ]
+  const [data, setData] = useState<Procurement[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    searchPncp({ q: 'pregão', tam_pagina: 20 }).then((items) => {
+      setData(items.filter((p) => p.status === 'aberto' || p.status === 'em_andamento'))
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-[var(--muted)] animate-pulse">Carregando pregões da PNCP...</p>
+      </div>
+    )
+  }
+
+  const abertos = data.filter((p) => p.status === 'aberto')
+  const andamento = data.filter((p) => p.status === 'em_andamento')
+
   return (
     <div className="space-y-6">
       <header>
-        <h2 className="text-base font-semibold text-[var(--text)] text-red-600 flex items-center gap-2">
+        <h2 className="text-base font-semibold text-[var(--text)] flex items-center gap-2">
           <span className="relative flex h-3 w-3">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
           </span>
           Sala de Operações (Ao Vivo)
         </h2>
-        <p className="mt-1 text-sm text-[var(--muted)]">Monitoramento de pregões ocorrendo hoje. Dossiê pré-pregão e acompanhamento de lances.</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Licitações abertas e em andamento na PNCP.</p>
       </header>
 
       <div className="grid lg:grid-cols-2 gap-6">
         <div className="space-y-4">
-           {PREGOES_HOJE.map(p => (
-             <div key={p.id} className="rounded border border-[var(--brand)] bg-[var(--surface-hover)] p-4 shadow-sm relative">
-               {p.status.includes('Disputa') && <div className="absolute top-0 left-0 w-full h-1 bg-[var(--brand)] animate-pulse rounded-t"></div>}
-               <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold text-sm text-[var(--text)]">{p.id}</h3>
-                    <p className="text-xs text-[var(--muted)]">{p.orgao}</p>
-                  </div>
-                  <span className="text-[10px] uppercase font-bold text-white bg-red-600 px-2 py-0.5 rounded">{p.status}</span>
-               </div>
-               <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                 <div className="bg-[var(--surface)] p-2 rounded">
-                    <span className="text-[var(--muted)] block">Meu LanceAtual</span>
-                    <strong className="text-[var(--text)]">{p.meuLance}</strong>
-                 </div>
-                 <div className="bg-[var(--surface)] p-2 rounded border border-red-200 dark:border-red-900/50">
-                    <span className="text-[var(--muted)] block">Menor Lance Coletado</span>
-                    <strong className="text-red-500">{p.menorLance}</strong>
-                 </div>
-               </div>
-             </div>
-           ))}
+          <h3 className="text-sm font-semibold text-[var(--text)]">Abertas ({abertos.length})</h3>
+          {abertos.slice(0, 5).map((p) => (
+            <div key={p.id} className="rounded border border-[var(--brand)] bg-[var(--surface-hover)] p-4 shadow-sm">
+              <div className="flex justify-between items-start">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-sm text-[var(--text)] truncate">{p.title}</h3>
+                  <p className="text-xs text-[var(--muted)]">{p.orgao || p.portal}</p>
+                </div>
+                <span className="ml-2 text-[10px] uppercase font-bold text-white bg-green-600 px-2 py-0.5 rounded shrink-0">Aberta</span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                <div className="bg-[var(--surface)] p-2 rounded">
+                  <span className="text-[var(--muted)] block">Valor Estimado</span>
+                  <strong className="text-[var(--text)]">{formatBrl(p.valueBrl)}</strong>
+                </div>
+                <div className="bg-[var(--surface)] p-2 rounded">
+                  <span className="text-[var(--muted)] block">UF</span>
+                  <strong className="text-[var(--text)]">{p.uf} {p.city ? `- ${p.city}` : ''}</strong>
+                </div>
+              </div>
+            </div>
+          ))}
+          {abertos.length === 0 ? <p className="text-xs text-[var(--muted)]">Nenhuma licitação aberta no momento.</p> : null}
         </div>
-        
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
-           <h3 className="font-semibold text-sm text-[var(--text)] border-b border-[var(--border)] pb-2 mb-4">Dossiê de Concorrentes (Pré-Pregão)</h3>
-           <p className="text-xs text-[var(--muted)] mb-3">Detectados na sala de disputa do Pregão 012/2026:</p>
-           <ul className="space-y-3">
-              <li className="flex justify-between items-center bg-[var(--surface-hover)] p-2 rounded">
-                 <div> <strong className="text-xs text-[var(--text)] block">Empresa Alpha TI (SP)</strong> <span className="text-[10px] text-[var(--muted)]">Win Rate: 34% - Preço Agressivo</span> </div>
-                 <span className="text-xs bg-red-100 text-red-800 dark:bg-red-900/30 px-2 py-1 rounded">Risco Alto</span>
-              </li>
-              <li className="flex justify-between items-center bg-[var(--surface-hover)] p-2 rounded">
-                 <div> <strong className="text-xs text-[var(--text)] block">Beta Solutions (MG)</strong> <span className="text-[10px] text-[var(--muted)]">Win Rate: 12% - Desiste fácil</span> </div>
-                 <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900/30 px-2 py-1 rounded">Risco Baixo</span>
-              </li>
-           </ul>
+
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-[var(--text)]">Em Andamento ({andamento.length})</h3>
+          {andamento.slice(0, 5).map((p) => (
+            <div key={p.id} className="rounded border border-amber-500 bg-[var(--surface-hover)] p-4 shadow-sm">
+              <div className="flex justify-between items-start">
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-sm text-[var(--text)] truncate">{p.title}</h3>
+                  <p className="text-xs text-[var(--muted)]">{p.orgao || p.portal}</p>
+                </div>
+                <span className="ml-2 text-[10px] uppercase font-bold text-white bg-amber-600 px-2 py-0.5 rounded shrink-0">Em Andamento</span>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                <div className="bg-[var(--surface)] p-2 rounded">
+                  <span className="text-[var(--muted)] block">Valor Estimado</span>
+                  <strong className="text-[var(--text)]">{formatBrl(p.valueBrl)}</strong>
+                </div>
+                <div className="bg-[var(--surface)] p-2 rounded">
+                  <span className="text-[var(--muted)] block">Modalidade</span>
+                  <strong className="text-[var(--text)]">{p.modalidade || p.uf}</strong>
+                </div>
+              </div>
+            </div>
+          ))}
+          {andamento.length === 0 ? <p className="text-xs text-[var(--muted)]">Nenhuma licitação em andamento.</p> : null}
         </div>
       </div>
     </div>
