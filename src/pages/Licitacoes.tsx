@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useFavoriteIds } from '../hooks/useFavoriteIds'
 import { ProcurementCard } from '../components/ProcurementCard'
 import { searchPncp } from '../services/pncpApi'
@@ -11,19 +11,16 @@ export function Licitacoes() {
   const [uf, setUf] = useState('')
   const [tab, setTab] = useState<'todas' | 'escolhidas'>('todas')
   const [data, setData] = useState<Procurement[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [searched, setSearched] = useState(false)
 
   const fetchData = useCallback(async (query: string) => {
     setLoading(true)
+    setSearched(true)
     const items = await searchPncp({ q: query || 'software', tam_pagina: 30 })
     setData(items)
     setLoading(false)
   }, [])
-
-  useEffect(() => {
-    const delay = setTimeout(() => fetchData(q), 600)
-    return () => clearTimeout(delay)
-  }, [q, fetchData])
 
   const portals = useMemo(() => {
     const s = new Set(data.map((p) => p.portal).filter(Boolean))
@@ -48,6 +45,10 @@ export function Licitacoes() {
       return true
     })
   }, [data, q, portal, uf, tab, isFavorite])
+
+  const handleSearch = useCallback(() => {
+    fetchData(q)
+  }, [q, fetchData])
 
   return (
     <div className="space-y-6">
@@ -85,7 +86,10 @@ export function Licitacoes() {
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
+      <form
+        onSubmit={(e) => { e.preventDefault(); handleSearch() }}
+        className="flex flex-wrap gap-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4"
+      >
         <label className="flex min-w-[12rem] flex-1 flex-col gap-1 text-xs font-medium text-[var(--muted)]">
           Busca
           <input
@@ -126,13 +130,28 @@ export function Licitacoes() {
             ))}
           </select>
         </label>
-      </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="self-end rounded-lg bg-[var(--brand)] px-5 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-hover)] disabled:opacity-50"
+        >
+          {loading ? 'Buscando...' : 'Pesquisar'}
+        </button>
+      </form>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {loading ? (
           <div className="p-8 text-center text-[var(--brand)] animate-pulse col-span-2">
             Buscando na API do Governo Federal (PNCP)...
           </div>
+        ) : !searched ? (
+          <p className="col-span-2 py-8 text-center text-sm text-[var(--muted)]">
+            Digite um termo e clique em <strong>Pesquisar</strong> para buscar licitações na PNCP.
+          </p>
+        ) : filtered.length === 0 ? (
+          <p className="col-span-2 py-8 text-center text-sm text-[var(--muted)]">
+            Nenhum resultado encontrado. Tente outros termos de busca.
+          </p>
         ) : (
           filtered.map((p) => (
             <ProcurementCard
@@ -145,12 +164,6 @@ export function Licitacoes() {
           ))
         )}
       </div>
-
-      {!loading && filtered.length === 0 ? (
-        <p className="text-sm text-[var(--muted)]">
-          Nenhum resultado encontrado na PNCP. Tente outros termos de busca.
-        </p>
-      ) : null}
     </div>
   )
 }
