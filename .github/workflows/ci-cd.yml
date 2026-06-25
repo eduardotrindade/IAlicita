@@ -42,3 +42,4 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-args: '--prod'
           working-directory: .
+          vercel-name: 'i-alicita'
