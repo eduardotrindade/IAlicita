@@ -3,7 +3,7 @@ import type { Procurement } from '../types'
 const PROXY_URL = import.meta.env.VITE_PNCP_BASE_URL || '/api-pncp'
 const DIRECT_URL = 'https://pncp.gov.br'
 
-export interface PncpItem {
+interface PncpItem {
   id: string
   index: string
   doc_type: string
@@ -59,7 +59,7 @@ export interface PncpItem {
   tipo_margem_preferencia_nome: string
 }
 
-export interface SearchParams {
+interface SearchParams {
   q?: string
   tipos_documento?: string
   tam_pagina?: number
@@ -69,8 +69,8 @@ export interface SearchParams {
   modalidade?: string
 }
 
-function mapPncpToProcurement(i: PncpItem) {
-  const statusMap: Record<string, string> = {
+function mapPncpToProcurement(i: PncpItem): Procurement {
+  const statusMap: Record<string, Procurement['status']> = {
     '1': 'aberto',
     '2': 'em_andamento',
     '3': 'cancelado',
@@ -90,7 +90,7 @@ function mapPncpToProcurement(i: PncpItem) {
     uf: i.uf || 'BR',
     city: i.municipio_nome,
     valueBrl: value,
-    status: (statusMap[i.situacao_id] || 'aberto') as Procurement['status'],
+    status: (statusMap[i.situacao_id] || 'aberto'),
     deadline: deadline ? deadline.split('T')[0] : new Date().toISOString().split('T')[0],
     keywordsMatched: keywords,
     technicalScore: undefined,
@@ -102,7 +102,7 @@ function mapPncpToProcurement(i: PncpItem) {
   }
 }
 
-const fetchFromUrl = async (baseUrl: string, params: SearchParams) => {
+const fetchFromUrl = async (baseUrl: string, params: SearchParams, signal?: AbortSignal) => {
   const query = params.q || 'software'
   const tipoDoc = params.tipos_documento || 'edital'
   const tamanho = params.tam_pagina || 20
@@ -111,7 +111,7 @@ const fetchFromUrl = async (baseUrl: string, params: SearchParams) => {
 
   const res = await fetch(
     `${baseUrl}/api/search/?q=${encodeURIComponent(query)}&tipos_documento=${tipoDoc}&tam_pagina=${tamanho}&pagina=${pagina}${ufParam}`,
-    { method: 'GET', headers: { 'Accept': 'application/json' } }
+    { method: 'GET', headers: { 'Accept': 'application/json' }, signal }
   )
   if (!res.ok) throw new Error(`PNCP erro ${res.status}`)
   const data = await res.json()
@@ -119,36 +119,14 @@ const fetchFromUrl = async (baseUrl: string, params: SearchParams) => {
   return items.map(mapPncpToProcurement)
 }
 
-export const searchPncp = async (params: SearchParams = {}): Promise<ReturnType<typeof mapPncpToProcurement>[]> => {
+export const searchPncp = async (params: SearchParams = {}, signal?: AbortSignal): Promise<Procurement[]> => {
   try {
-    return await fetchFromUrl(DIRECT_URL, params)
+    return await fetchFromUrl(DIRECT_URL, params, signal)
   } catch {
     try {
-      return await fetchFromUrl(PROXY_URL, params)
-    } catch (err) {
-      console.error('Erro na API PNCP (direta e proxy)', err)
+      return await fetchFromUrl(PROXY_URL, params, signal)
+    } catch {
       return []
-    }
-  }
-}
-
-export const fetchPncpDetails = async (orgaoCnpj: string, ano: string, sequencial: string) => {
-  const tryUrl = async (baseUrl: string) => {
-    const res = await fetch(
-      `${baseUrl}/api/compras/${orgaoCnpj}/${ano}/${sequencial}`,
-      { method: 'GET', headers: { 'Accept': 'application/json' } }
-    )
-    if (!res.ok) throw new Error(`PNCP detalhe erro ${res.status}`)
-    return await res.json()
-  }
-  try {
-    return await tryUrl(PROXY_URL)
-  } catch {
-    try {
-      return await tryUrl(DIRECT_URL)
-    } catch (err) {
-      console.error('Erro ao buscar detalhes PNCP', err)
-      return null
     }
   }
 }

@@ -1,34 +1,90 @@
+import { useState, useEffect } from 'react'
+import { searchPncp } from '../services/pncpApi'
+import type { Procurement } from '../types'
+
 export function AnalisadorEspecificacoes() {
+  const [data, setData] = useState<Procurement[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'tecnologia', tam_pagina: 20 }, controller.signal)
+      .then(items => { if (!controller.signal.aborted) { setData(items); setLoading(false) } })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar dados'); setLoading(false) } })
+    return () => controller.abort()
+  }, [])
+
+  const comModalidade = data.filter(p => p.modalidade)
+  const modalidades = [...new Set(comModalidade.map(p => p.modalidade))]
+
   return (
     <div className="space-y-6 max-w-5xl">
-       <header>
+      <header>
         <h2 className="text-base font-semibold text-[var(--text)]">Analisador de Especificações Técnicas</h2>
-        <p className="mt-1 text-sm text-[var(--muted)]">Faça upload do Edital de um lado, e do seu Datasheet do outro.</p>
+        <p className="mt-1 text-sm text-[var(--muted)]">Análise de modalidades e critérios das licitações reais da PNCP.</p>
       </header>
-      
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-xl border-2 border-dashed border-[var(--border)] bg-[var(--surface-hover)] hover:bg-[var(--surface)] p-8 text-center transition-colors">
-          <p className="text-sm font-medium text-[var(--text)]">Arraste o Edital (.pdf)</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Extraia as exigências técnicas</p>
-        </div>
-        <div className="rounded-xl border-2 border-dashed border-[var(--border)] bg-[var(--surface-hover)] hover:bg-[var(--surface)] p-8 text-center transition-colors">
-          <p className="text-sm font-medium text-[var(--text)]">Arraste seus Manuais/Datasheets</p>
-          <p className="text-xs text-[var(--muted)] mt-1">Para verificar a aderência</p>
-        </div>
-      </div>
 
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm mt-8">
-        <h3 className="font-semibold text-sm text-[var(--text)] mb-4">Resultado da Análise</h3>
-        <div className="flex items-center gap-4 border-l-4 border-amber-500 bg-amber-50 dark:bg-amber-900/20 p-4 rounded-r-md">
-          <div className="h-10 w-10 shrink-0 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 font-bold dark:bg-amber-800">
-            85%
-          </div>
-          <div>
-            <p className="text-sm font-medium text-amber-900 dark:text-amber-100">Alerta de Conformidade Parcial</p>
-            <p className="text-xs text-amber-700 dark:text-amber-200 mt-1">Seu produto atende à maioria dos critérios, mas o edital exige fonte redundante hot-swap, característica ausente no seu datasheet.</p>
-          </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-sm text-[var(--muted)] animate-pulse">Carregando dados da PNCP...</p>
         </div>
-      </div>
+      ) : error ? (
+        <div className="flex items-center justify-center py-20">
+          <p className="text-sm text-red-500">{error}</p>
+        </div>
+      ) : (
+        <>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-[var(--text)] mb-3">Modalidades Encontradas</h3>
+              <div className="space-y-2">
+                {modalidades.slice(0, 6).map(m => {
+                  const count = comModalidade.filter(p => p.modalidade === m).length
+                  return (
+                    <div key={m} className="flex justify-between items-center text-xs">
+                      <span className="text-[var(--text)]">{m}</span>
+                      <span className="font-mono text-[var(--muted)]">{count} ocorrências</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
+              <h3 className="text-sm font-semibold text-[var(--text)] mb-3">Resumo</h3>
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-[var(--muted)]">Total analisadas</span>
+                  <span className="text-[var(--text)] font-semibold">{data.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--muted)]">Com modalidade definida</span>
+                  <span className="text-[var(--text)] font-semibold">{comModalidade.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--muted)]">Modalidades únicas</span>
+                  <span className="text-[var(--text)] font-semibold">{modalidades.length}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm">
+            <h3 className="font-semibold text-sm text-[var(--text)] mb-4">Licitações com Especificações (PNCP)</h3>
+            <div className="space-y-3">
+              {data.slice(0, 6).map(p => (
+                <div key={p.id} className="border-b border-[var(--border)] pb-3 last:border-0">
+                  <p className="text-xs font-medium text-[var(--text)] truncate">{p.title}</p>
+                  <p className="text-[10px] text-[var(--muted)] mt-1">
+                    {p.modalidade || '—'} • {p.orgao || p.portal} • {p.uf}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

@@ -16,12 +16,14 @@ export function GlobalRagWidget() {
 
   return (
     <>
-      <button 
+      <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Fechar assistente IA' : 'Abrir assistente IA'}
         className="fixed bottom-6 right-6 z-50 rounded-full bg-[var(--brand)] p-4 shadow-xl text-white hover:bg-[var(--brand-hover)]"
       >
         <span className="flex items-center gap-2 font-bold text-sm">
-          <span>🧠</span> Ask IA (RAG)
+          <span aria-hidden>🧠</span> Ask IA (RAG)
         </span>
       </button>
 
@@ -29,7 +31,7 @@ export function GlobalRagWidget() {
         <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-2xl overflow-hidden flex flex-col" style={{ height: '400px' }}>
           <div className="bg-[var(--brand)] text-white p-3 font-semibold text-sm flex justify-between items-center">
              <span>Assistente RAG Global</span>
-             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200">X</button>
+             <button type="button" onClick={() => setIsOpen(false)} aria-label="Fechar" className="text-white hover:text-gray-200">X</button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[var(--surface)]">
             <div className="bg-[var(--surface-hover)] border border-[var(--border)] rounded-lg p-2 text-xs text-[var(--text)] text-center">
@@ -44,15 +46,15 @@ export function GlobalRagWidget() {
             ))}
           </div>
           <div className="p-3 border-t border-[var(--border)] bg-[var(--surface-hover)] flex gap-2">
-             <input 
+             <input
                value={inputVal}
                onChange={(e) => setInputVal(e.target.value)}
                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-               type="text" 
-               className="flex-1 rounded border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-sm focus:border-[var(--brand)] focus:outline-none" 
+               type="text"
+               className="flex-1 rounded border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-sm focus:border-[var(--brand)] focus:outline-none"
                placeholder="Pergunte à IA..."
              />
-             <button onClick={handleSend} className="bg-[var(--brand)] text-white px-3 py-1 rounded text-sm hover:bg-[var(--brand-hover)]">Enviar</button>
+             <button type="button" onClick={handleSend} className="bg-[var(--brand)] text-white px-3 py-1 rounded text-sm hover:bg-[var(--brand-hover)]">Enviar</button>
           </div>
         </div>
       )}

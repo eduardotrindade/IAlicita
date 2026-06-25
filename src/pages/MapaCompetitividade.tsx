@@ -7,12 +7,15 @@ export function MapaCompetitividade() {
   const [uf, setUf] = useState<string>('')
   const [data, setData] = useState<Procurement[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    searchPncp({ q: 'serviço', tam_pagina: 50 }).then((items) => {
-      setData(items)
-      setLoading(false)
-    })
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'serviço', tam_pagina: 50 }, controller.signal)
+      .then(items => { if (!controller.signal.aborted) { setData(items); setLoading(false) } })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar dados'); setLoading(false) } })
+    return () => controller.abort()
   }, [])
 
   const rows = useMemo(() => {
@@ -56,6 +59,14 @@ export function MapaCompetitividade() {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-sm text-[var(--muted)] animate-pulse">Carregando dados...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-red-500">{error}</p>
       </div>
     )
   }

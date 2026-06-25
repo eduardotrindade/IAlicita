@@ -6,18 +6,34 @@ import type { Procurement } from '../types'
 export function SalaOperacoes() {
   const [data, setData] = useState<Procurement[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    searchPncp({ q: 'pregão', tam_pagina: 20 }).then((items) => {
-      setData(items.filter((p) => p.status === 'aberto' || p.status === 'em_andamento'))
-      setLoading(false)
-    })
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'pregão', tam_pagina: 20 }, controller.signal)
+      .then(items => {
+        if (!controller.signal.aborted) {
+          setData(items.filter((p) => p.status === 'aberto' || p.status === 'em_andamento'))
+          setLoading(false)
+        }
+      })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar pregões'); setLoading(false) } })
+    return () => controller.abort()
   }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-sm text-[var(--muted)] animate-pulse">Carregando pregões da PNCP...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-red-500">{error}</p>
       </div>
     )
   }

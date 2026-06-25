@@ -14,18 +14,29 @@ const COLUMNS = [
 export function Pipeline() {
   const [data, setData] = useState<Procurement[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    searchPncp({ q: 'serviço', tam_pagina: 40 }).then((items) => {
-      setData(items)
-      setLoading(false)
-    })
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'serviço', tam_pagina: 40 }, controller.signal)
+      .then(items => { if (!controller.signal.aborted) { setData(items); setLoading(false) } })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar pipeline'); setLoading(false) } })
+    return () => controller.abort()
   }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-sm text-[var(--muted)] animate-pulse">Carregando pipeline...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-red-500">{error}</p>
       </div>
     )
   }

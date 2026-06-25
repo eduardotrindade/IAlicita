@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import type { Procurement } from '../types'
 import { formatBrl, formatDatePt, formatPercent } from '../utils/format'
 import { ShareButtons } from './ShareButtons'
@@ -17,7 +18,7 @@ const statusLabel: Record<Procurement['status'], string> = {
   cancelado: 'Cancelado',
 }
 
-export function ProcurementCard({
+export const ProcurementCard = memo(function ProcurementCard({
   procurement: p,
   favorite,
   onToggleFavorite,
@@ -78,4 +79,4 @@ export function ProcurementCard({
       ) : null}
     </article>
   )
-}
+})

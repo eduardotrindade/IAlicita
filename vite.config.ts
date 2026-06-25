@@ -15,11 +15,6 @@ export default defineConfig({
         target: 'https://pncp.gov.br',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-pncp/, ''),
-      },
-      '/api-transparencia': {
-        target: 'https://api.portaldatransparencia.gov.br',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api-transparencia/, ''),
       }
     }
   },

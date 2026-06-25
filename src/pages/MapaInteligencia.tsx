@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { searchPncp } from '../services/pncpApi'
-import { countByUf } from '../data/mockData'
+import { countByUf } from '../utils/countByUf'
 import { formatBrl } from '../utils/format'
 import { StatCard } from '../components/StatCard'
 import { ProcurementCard } from '../components/ProcurementCard'
@@ -13,15 +13,23 @@ export function MapaInteligencia() {
   const [selectedTopUf, setSelectedTopUf] = useState<string | null>(null)
   const [data, setData] = useState<Procurement[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    searchPncp({ q: 'tecnologia', tam_pagina: 50 }).then((items) => {
-      setData(items)
-      setLoading(false)
-    })
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'tecnologia', tam_pagina: 50 }, controller.signal)
+      .then(items => { if (!controller.signal.aborted) { setData(items); setLoading(false) } })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar dados'); setLoading(false) } })
+    return () => controller.abort()
   }, [])
 
-  const byScore = useMemo(() => data, [data])
+  const byScore = useMemo(() => {
+    return data.filter(p => {
+      if (p.technicalScore == null) return true
+      return p.technicalScore >= minScore
+    })
+  }, [data, minScore])
 
   const counts = countByUf(byScore)
   const top5 = Object.entries(counts)
@@ -46,6 +54,14 @@ export function MapaInteligencia() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-red-500">{error}</p>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <div>
@@ -56,7 +72,7 @@ export function MapaInteligencia() {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-medium text-[var(--muted)]">Filtrar por UF:</span>
+        <span className="text-xs font-medium text-[var(--muted)]">Filtrar por Top Score:</span>
         {SCORE_BANDS.map((n) => (
           <button
             key={n}
@@ -111,7 +127,7 @@ export function MapaInteligencia() {
                     : 'border-[var(--border)] bg-[var(--bg)] text-[var(--text)] hover:border-[var(--accent-dim)]'
                 }`}
               >
-                <span>{medals[i]}</span>
+                <span role="img" aria-label={`Posição ${i + 1}`}>{medals[i]}</span>
                 <span>{uf}</span>
                 <span className="font-mono text-xs text-[var(--muted)]">({n})</span>
               </button>

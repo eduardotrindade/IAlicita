@@ -42,8 +42,7 @@ export const lookupCnpj = async (cnpj: string): Promise<CnpjData | null> => {
         telefone: data.telefone || '',
       },
     }
-  } catch (err) {
-    console.error('Erro ao consultar CNPJ', err)
+  } catch {
     return null
   }
 }

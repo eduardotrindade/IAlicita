@@ -1,5 +1,6 @@
+import { memo } from 'react'
 import type { Procurement } from '../types'
-import { countByUf } from '../data/mockData'
+import { countByUf } from '../utils/countByUf'
 
 type Props = {
   items: Procurement[]
@@ -7,7 +8,7 @@ type Props = {
   onSelectUf: (uf: string | null) => void
 }
 
-export function UfHeatStrip({ items, selectedUf, onSelectUf }: Props) {
+export const UfHeatStrip = memo(function UfHeatStrip({ items, selectedUf, onSelectUf }: Props) {
   const counts = countByUf(items)
   const max = Math.max(1, ...Object.values(counts))
   const ufs = Object.entries(counts).sort((a, b) => b[1] - a[1])
@@ -63,4 +64,4 @@ export function UfHeatStrip({ items, selectedUf, onSelectUf }: Props) {
       </p>
     </div>
   )
-}
+})

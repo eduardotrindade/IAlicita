@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react'
 import { searchPncp } from '../services/pncpApi'
-import { countByUf } from '../data/mockData'
+import { countByUf } from '../utils/countByUf'
 import { formatBrl } from '../utils/format'
 import { StatCard } from '../components/StatCard'
 import { UfHeatStrip } from '../components/UfHeatStrip'
@@ -11,12 +11,15 @@ export function Dashboard() {
   const [uf, setUf] = useState<string | null>(null)
   const [data, setData] = useState<Procurement[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    searchPncp({ q: 'tecnologia', tam_pagina: 40 }).then((items) => {
-      setData(items)
-      setLoading(false)
-    })
+    const controller = new AbortController()
+    setLoading(true)
+    searchPncp({ q: 'tecnologia', tam_pagina: 40 }, controller.signal)
+      .then(items => { if (!controller.signal.aborted) { setData(items); setLoading(false) } })
+      .catch(() => { if (!controller.signal.aborted) { setError('Falha ao carregar dados da PNCP'); setLoading(false) } })
+    return () => controller.abort()
   }, [])
 
   const filtered = useMemo(() => {
@@ -32,6 +35,14 @@ export function Dashboard() {
     return (
       <div className="flex items-center justify-center py-20">
         <p className="text-sm text-[var(--muted)] animate-pulse">Carregando dados da PNCP...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-sm text-red-500">{error}</p>
       </div>
     )
   }

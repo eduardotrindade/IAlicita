@@ -1,10 +1,3 @@
-export type ProcurementStatus =
-  | 'aberto'
-  | 'em_andamento'
-  | 'homologado'
-  | 'deserto'
-  | 'cancelado'
-
 export interface Procurement {
   id: string
   title: string
@@ -12,7 +5,7 @@ export interface Procurement {
   uf: string
   city?: string
   valueBrl: number
-  status: ProcurementStatus
+  status: 'aberto' | 'em_andamento' | 'homologado' | 'deserto' | 'cancelado'
   deadline: string
   keywordsMatched: string[]
   technicalScore?: number
@@ -21,20 +14,6 @@ export interface Procurement {
   modalidade?: string
   situacao?: string
   dataPublicacao?: string
-}
-
-export interface Supplier {
-  id: string
-  companyName: string
-  cnpj: string
-  uf: string
-  isMicroOrSmall: boolean
-  participations: number
-  wins: number
-  totalWonValueBrl: number
-  avgTicketBrl: number
-  winRate: number
-  recentPortals: string[]
 }
 
 export interface CnpjData {

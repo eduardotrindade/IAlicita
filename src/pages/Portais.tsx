@@ -1,21 +1,21 @@
+const PORTAIS_OFICIAIS = [
+  { nome: 'PNCP', desc: 'Portal Nacional de Contratações Públicas', url: 'https://pncp.gov.br' },
+  { nome: 'Compras.gov.br', desc: 'Governo Federal - Dados Abertos', url: 'https://dadosabertos.compras.gov.br' },
+  { nome: 'BEC-SP', desc: 'Bolsa Eletrônica de Compras de SP', url: 'https://www.bec.sp.gov.br' },
+  { nome: 'Compras MG', desc: 'Portal de Compras de Minas Gerais', url: 'https://www.compras.mg.gov.br' },
+  { nome: 'SEPLAG/MT', desc: 'Sistema SIAG - Mato Grosso', url: 'https://aquisicoes.seplag.mt.gov.br' },
+  { nome: 'Portal de Compras PA', desc: 'Pará', url: 'https://www.portaldecompras.pa.gov.br' },
+  { nome: 'Compras BA', desc: 'Bahia', url: 'https://www.compras.ba.gov.br' },
+  { nome: 'CEIS/CNEP', desc: 'Cadastros de Empresas Inidôneas', url: 'https://portaldacontratacao.gov.br/ceis' },
+]
+
+const PLATAFORMAS_BUSCA = [
+  { nome: 'Effecti', desc: 'Integra mais de 1.400 portais para facilitar a busca.' },
+  { nome: 'Siga Pregão', desc: 'Pesquisas diárias automáticas em diversos portais.' },
+  { nome: 'Licit Mais Brasil', desc: 'Focado em empresários e fornecedores.' },
+]
+
 export function Portais() {
-  const PORTAIS_OFICIAIS = [
-    { nome: 'PNCP', desc: 'Portal Nacional de Contratações Públicas', url: 'https://pncp.gov.br' },
-    { nome: 'Compras.gov.br', desc: 'Governo Federal - Dados Abertos', url: 'https://dadosabertos.compras.gov.br' },
-    { nome: 'BEC-SP', desc: 'Bolsa Eletrônica de Compras de SP', url: 'https://www.bec.sp.gov.br' },
-    { nome: 'Compras MG', desc: 'Portal de Compras de Minas Gerais', url: 'https://www.compras.mg.gov.br' },
-    { nome: 'SEPLAG/MT', desc: 'Sistema SIAG - Mato Grosso', url: 'https://aquisicoes.seplag.mt.gov.br' },
-    { nome: 'Portal de Compras PA', desc: 'Pará', url: 'https://www.portaldecompras.pa.gov.br' },
-    { nome: 'Compras BA', desc: 'Bahia', url: 'https://www.compras.ba.gov.br' },
-    { nome: 'CEIS/CNEP', desc: 'Cadastros de Empresas Inidôneas', url: 'https://portaldacontratacao.gov.br/ceis' },
-  ]
-
-  const PLATAFORMAS_BUSCA = [
-    { nome: 'Effecti', desc: 'Integra mais de 1.400 portais para facilitar a busca.' },
-    { nome: 'Siga Pregão', desc: 'Pesquisas diárias automáticas em diversos portais.' },
-    { nome: 'Licit Mais Brasil', desc: 'Focado em empresários e fornecedores.' },
-  ]
-
   return (
     <div className="space-y-8">
       <header>

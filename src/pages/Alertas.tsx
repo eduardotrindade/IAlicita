@@ -5,8 +5,21 @@ const STORAGE_KEY = 'ialicita_alert_keywords'
 function loadKeywords(): { word: string; active: boolean }[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
-  } catch { /* ignore */ }
+    if (!raw) return getDefaultKeywords()
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return getDefaultKeywords()
+    return parsed.filter(
+      (k: unknown): k is { word: string; active: boolean } =>
+        typeof k === 'object' && k !== null &&
+        typeof (k as Record<string, unknown>).word === 'string' &&
+        typeof (k as Record<string, unknown>).active === 'boolean'
+    )
+  } catch {
+    return getDefaultKeywords()
+  }
+}
+
+function getDefaultKeywords(): { word: string; active: boolean }[] {
   return [
     { word: 'engenharia', active: true },
     { word: 'construção', active: true },
@@ -89,6 +102,8 @@ export function Alertas() {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    role="switch"
+                    aria-checked={k.active}
                     onClick={() => toggleKeyword(k.word)}
                     className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
                       k.active ? 'bg-[var(--brand)]' : 'bg-[var(--border)]'

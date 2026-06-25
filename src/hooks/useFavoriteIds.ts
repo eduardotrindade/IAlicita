@@ -1,24 +1,25 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-const KEY = 'smartia-favoritos'
+const KEY = 'ialicita-favoritos'
+
+function loadFavorites(): Set<string> {
+  try {
+    const raw = localStorage.getItem(KEY)
+    if (!raw) return new Set()
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return new Set()
+    return new Set(parsed.filter((id): id is string => typeof id === 'string'))
+  } catch {
+    return new Set()
+  }
+}
 
 export function useFavoriteIds(): {
   favoriteIds: Set<string>
   toggle: (id: string) => void
   isFavorite: (id: string) => boolean
 } {
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => new Set())
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY)
-      if (!raw) return
-      const arr = JSON.parse(raw) as string[]
-      setFavoriteIds(new Set(arr))
-    } catch {
-      /* ignore */
-    }
-  }, [])
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(loadFavorites)
 
   const persist = useCallback((next: Set<string>) => {
     localStorage.setItem(KEY, JSON.stringify([...next]))

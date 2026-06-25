@@ -1,10 +1,12 @@
+import { memo } from 'react'
+
 type Props = {
   label: string
   value: string
   hint?: string
 }
 
-export function StatCard({ label, value, hint }: Props) {
+export const StatCard = memo(function StatCard({ label, value, hint }: Props) {
   return (
     <article className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 shadow-sm">
       <p className="text-xs font-medium uppercase tracking-wide text-[var(--muted)]">
@@ -18,4 +20,4 @@ export function StatCard({ label, value, hint }: Props) {
       ) : null}
     </article>
   )
-}
+})
