@@ -1,0 +1,65 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "siliconflow": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "SiliconFlow",
+      "options": {
+        "baseURL": "https://api.siliconflow.cn/v1"
+      },
+      "models": {
+        "Qwen/Qwen2.5-72B-Instruct": {
+          "name": "Qwen 2.5 72B (SiliconFlow)",
+          "limit": {
+            "context": 131072,
+            "output": 8192
+          }
+        },
+        "deepseek-ai/DeepSeek-V3": {
+          "name": "DeepSeek V3 (SiliconFlow)",
+          "limit": {
+            "context": 131072,
+            "output": 8192
+          }
+        },
+        "Pro/deepseek-ai/DeepSeek-R1": {
+          "name": "DeepSeek R1 Pro (SiliconFlow)",
+          "limit": {
+            "context": 131072,
+            "output": 8192
+          }
+        }
+      }
+    },
+    "aimlap": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "AIML API",
+      "options": {
+        "baseURL": "https://api.aimlapi.com/v1"
+      },
+      "models": {
+        "openai/gpt-4o-mini": {
+          "name": "GPT-4o Mini (AIML)",
+          "limit": {
+            "context": 128000,
+            "output": 16384
+          }
+        },
+        "openai/gpt-4o": {
+          "name": "GPT-4o (AIML)",
+          "limit": {
+            "context": 128000,
+            "output": 16384
+          }
+        },
+        "anthropic/claude-sonnet-4-20250514": {
+          "name": "Claude Sonnet 4 (AIML)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          }
+        }
+      }
+    }
+  }
+}
