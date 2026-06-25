@@ -35,3 +35,7 @@ temp/
 # Python
 __pycache__/
 *.pyc
+
+# Vercel local env (contains OIDC token)
+.env.local
+.env*
