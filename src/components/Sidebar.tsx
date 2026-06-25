@@ -65,6 +65,7 @@ export function Sidebar() {
             { to: '/classificacao-ia', label: 'Classificação da IA' },
             { to: '/matchmaking', label: 'Matchmaking' },
             { to: '/mapas-uf', label: 'Mapas UF' },
+            { to: '/mapa-competitividade', label: 'Mapa Competitividade' },
             { to: '/monitor-pca', label: 'Monitor PCA' },
           ]}
         />
@@ -111,7 +112,6 @@ export function Sidebar() {
            title="Auditoria & Compliance"
            items={[
              { to: '/grafo-societario', label: 'Grafo Societário (Anticartel)' },
-             { to: '/compliance', label: 'Compliance & Integridade' },
            ]}
         />
       </nav>

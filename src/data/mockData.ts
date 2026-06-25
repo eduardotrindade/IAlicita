@@ -5,6 +5,8 @@ export async function fetchProcurements(query = 'software', tamanho = 50): Promi
   return searchPncp({ q: query, tam_pagina: tamanho })
 }
 
+export const SCORE_BANDS = [60, 70, 80, 90] as const
+
 export function countByUf(items: Procurement[]): Record<string, number> {
   return items.reduce<Record<string, number>>((acc, p) => {
     const uf = p.uf || 'BR'

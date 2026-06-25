@@ -16,7 +16,6 @@ export interface Procurement {
   deadline: string
   keywordsMatched: string[]
   technicalScore?: number
-  favored?: boolean
   orgao?: string
   unidade?: string
   modalidade?: string

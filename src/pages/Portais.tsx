@@ -10,7 +10,7 @@ export function Portais() {
     { nome: 'SEPLAG/MT', desc: 'Mato Grosso' },
   ]
 
-  const PLATAFORMAS_BUSHCA = [
+  const PLATAFORMAS_BUSCA = [
     { nome: 'Effecti', desc: 'Integra mais de 1.400 portais para facilitar a busca.' },
     { nome: 'Siga Pregão', desc: 'Pesquisas diárias automáticas em diversos portais.' },
     { nome: 'Licit Mais Brasil', desc: 'Focado em empresários e fornecedores.' },
@@ -40,7 +40,7 @@ export function Portais() {
       <section>
         <h3 className="mb-4 text-sm font-semibold text-[var(--text)]">Plataformas de Monitoramento</h3>
         <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-          {PLATAFORMAS_BUSHCA.map((p) => (
+          {PLATAFORMAS_BUSCA.map((p) => (
             <div key={p.nome} className="rounded-lg border border-[var(--brand)] bg-[var(--surface-hover)] p-4 shadow-sm">
               <p className="font-semibold text-sm text-[var(--text)]">{p.nome}</p>
               <p className="text-xs text-[var(--muted)] mt-1">{p.desc}</p>
