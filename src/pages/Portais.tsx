@@ -1,13 +1,13 @@
 export function Portais() {
   const PORTAIS_OFICIAIS = [
-    { nome: 'Compras.gov.br', desc: 'Governo Federal' },
-    { nome: 'PNCP', desc: 'Portal Nacional de Contratações Públicas' },
-    { nome: 'Licitações-e', desc: 'Banco do Brasil' },
-    { nome: 'BEC', desc: 'Bolsa Eletrônica de Compras de SP' },
-    { nome: 'Compras MG', desc: 'Principal de Minas Gerais' },
-    { nome: 'Comprasnet.BA', desc: 'Licitações do estado da Bahia' },
-    { nome: 'SIAG', desc: 'Sistema Integrado' },
-    { nome: 'SEPLAG/MT', desc: 'Mato Grosso' },
+    { nome: 'PNCP', desc: 'Portal Nacional de Contratações Públicas', url: 'https://pncp.gov.br' },
+    { nome: 'Compras.gov.br', desc: 'Governo Federal - Dados Abertos', url: 'https://dadosabertos.compras.gov.br' },
+    { nome: 'BEC-SP', desc: 'Bolsa Eletrônica de Compras de SP', url: 'https://www.bec.sp.gov.br' },
+    { nome: 'Compras MG', desc: 'Portal de Compras de Minas Gerais', url: 'https://www.compras.mg.gov.br' },
+    { nome: 'SEPLAG/MT', desc: 'Sistema SIAG - Mato Grosso', url: 'https://aquisicoes.seplag.mt.gov.br' },
+    { nome: 'Portal de Compras PA', desc: 'Pará', url: 'https://www.portaldecompras.pa.gov.br' },
+    { nome: 'Compras BA', desc: 'Bahia', url: 'https://www.compras.ba.gov.br' },
+    { nome: 'CEIS/CNEP', desc: 'Cadastros de Empresas Inidôneas', url: 'https://portaldacontratacao.gov.br/ceis' },
   ]
 
   const PLATAFORMAS_BUSCA = [
@@ -29,10 +29,17 @@ export function Portais() {
         <h3 className="mb-4 text-sm font-semibold text-[var(--text)]">Portais Oficiais (Bases)</h3>
         <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           {PORTAIS_OFICIAIS.map((p) => (
-            <div key={p.nome} className="rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm hover:border-[var(--brand)]">
+            <a
+              key={p.nome}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-lg border border-[var(--border)] bg-[var(--surface)] p-3 shadow-sm hover:border-[var(--brand)] transition-colors"
+            >
               <p className="font-semibold text-sm text-[var(--text)]">{p.nome}</p>
               <p className="text-xs text-[var(--muted)] mt-1">{p.desc}</p>
-            </div>
+              <p className="text-[10px] text-[var(--brand)] mt-1 truncate">{p.url}</p>
+            </a>
           ))}
         </div>
       </section>

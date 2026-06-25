@@ -8,11 +8,10 @@ function loadKeywords(): { word: string; active: boolean }[] {
     if (raw) return JSON.parse(raw)
   } catch { /* ignore */ }
   return [
-    { word: 'SOC', active: true },
-    { word: 'SIEM', active: true },
-    { word: 'Pentest', active: true },
-    { word: 'Threat Intelligence', active: true },
-    { word: 'XDR/EDR', active: true },
+    { word: 'engenharia', active: true },
+    { word: 'construção', active: true },
+    { word: 'escolas', active: true },
+    { word: 'saneamento', active: true },
   ]
 }
 

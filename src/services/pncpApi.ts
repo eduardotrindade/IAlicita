@@ -107,9 +107,10 @@ const fetchFromUrl = async (baseUrl: string, params: SearchParams) => {
   const tipoDoc = params.tipos_documento || 'edital'
   const tamanho = params.tam_pagina || 20
   const pagina = params.pagina || 1
+  const ufParam = params.uf ? `&uf=${encodeURIComponent(params.uf)}` : ''
 
   const res = await fetch(
-    `${baseUrl}/api/search/?q=${encodeURIComponent(query)}&tipos_documento=${tipoDoc}&tam_pagina=${tamanho}&pagina=${pagina}`,
+    `${baseUrl}/api/search/?q=${encodeURIComponent(query)}&tipos_documento=${tipoDoc}&tam_pagina=${tamanho}&pagina=${pagina}${ufParam}`,
     { method: 'GET', headers: { 'Accept': 'application/json' } }
   )
   if (!res.ok) throw new Error(`PNCP erro ${res.status}`)
@@ -120,12 +121,12 @@ const fetchFromUrl = async (baseUrl: string, params: SearchParams) => {
 
 export const searchPncp = async (params: SearchParams = {}): Promise<ReturnType<typeof mapPncpToProcurement>[]> => {
   try {
-    return await fetchFromUrl(PROXY_URL, params)
+    return await fetchFromUrl(DIRECT_URL, params)
   } catch {
     try {
-      return await fetchFromUrl(DIRECT_URL, params)
+      return await fetchFromUrl(PROXY_URL, params)
     } catch (err) {
-      console.error('Erro na API PNCP (proxy e direta)', err)
+      console.error('Erro na API PNCP (direta e proxy)', err)
       return []
     }
   }

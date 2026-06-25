@@ -20,9 +20,8 @@ export function Dashboard() {
   }, [])
 
   const filtered = useMemo(() => {
-    const base = data.filter((p) => p.keywordsMatched.length > 0)
-    if (!uf) return base
-    return base.filter((p) => p.uf === uf)
+    if (!uf) return data
+    return data.filter((p) => p.uf === uf)
   }, [data, uf])
 
   const totalValue = filtered.reduce((s, p) => s + p.valueBrl, 0)

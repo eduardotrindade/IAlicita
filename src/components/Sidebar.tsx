@@ -33,7 +33,7 @@ function NavGroup({ title, items }: { title: string; items: Item[] }) {
 
 export function Sidebar() {
   return (
-    <aside className="flex h-full w-64 min-w-[16rem] flex-shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)]">
+    <aside className="sticky top-0 flex h-screen w-64 min-w-[16rem] flex-shrink-0 flex-col border-r border-[var(--border)] bg-[var(--sidebar)]">
       <div className="border-b border-[var(--border)] px-4 py-5">
         <div className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)]">
