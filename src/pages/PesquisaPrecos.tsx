@@ -11,23 +11,28 @@ export function PesquisaPrecos() {
     e.preventDefault()
     if (!item.trim()) return
     setLoading(true)
-    const data = await searchPncp({ q: item, tam_pagina: 30 })
-    if (data.length > 0) {
-      const values = data.map((p) => p.valueBrl).filter((v) => v > 0)
-      if (values.length > 0) {
-        setResults({
-          min: Math.min(...values),
-          max: Math.max(...values),
-          avg: values.reduce((s, v) => s + v, 0) / values.length,
-          count: values.length,
-        })
+    try {
+      const data = await searchPncp({ q: item, tam_pagina: 30 })
+      if (data.length > 0) {
+        const values = data.map((p) => p.valueBrl).filter((v) => v > 0)
+        if (values.length > 0) {
+          setResults({
+            min: Math.min(...values),
+            max: Math.max(...values),
+            avg: values.reduce((s, v) => s + v, 0) / values.length,
+            count: values.length,
+          })
+        } else {
+          setResults({ min: 0, avg: 0, max: 0, count: 0 })
+        }
       } else {
-        setResults({ min: 0, avg: 0, max: 0, count: 0 })
+        setResults(null)
       }
-    } else {
+    } catch {
       setResults(null)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (

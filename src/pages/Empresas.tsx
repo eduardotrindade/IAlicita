@@ -42,17 +42,21 @@ export function Empresas() {
       return
     }
     setLoading(true)
-    const cnpjResult = await lookupCnpj(digits)
-    if (!cnpjResult) {
-      setError('CNPJ não encontrado')
+    try {
+      const cnpjResult = await lookupCnpj(digits)
+      if (!cnpjResult) {
+        setError('CNPJ não encontrado')
+        return
+      }
+      const atividade = cnpjResult.atividade_principal?.text?.split(/\s+/).slice(0, 3).join(' ') || 'tecnologia'
+      const procResult = await searchPncp({ q: atividade, tam_pagina: 15 })
+      setCards((prev) => [...prev, empresaToCard(cnpjResult, procResult)])
+      setCnpj('')
+    } catch {
+      setError('Erro ao consultar APIs')
+    } finally {
       setLoading(false)
-      return
     }
-    const atividade = cnpjResult.atividade_principal?.text?.split(/\s+/).slice(0, 3).join(' ') || 'tecnologia'
-    const procResult = await searchPncp({ q: atividade, tam_pagina: 15 })
-    setCards((prev) => [...prev, empresaToCard(cnpjResult, procResult)])
-    setLoading(false)
-    setCnpj('')
   }, [cnpj])
 
   return (

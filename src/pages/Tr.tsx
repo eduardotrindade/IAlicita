@@ -7,16 +7,16 @@ export function Tr() {
       </header>
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-5">
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">1. Objeto</label>
-          <input className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" placeholder="Especificação detalhada..." />
+          <label htmlFor="tr-objeto" className="block text-sm font-medium text-[var(--text)]">1. Objeto</label>
+          <input id="tr-objeto" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" placeholder="Especificação detalhada..." />
         </div>
          <div>
-          <label className="block text-sm font-medium text-[var(--text)]">2. Justificativa e Objetivo</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
+          <label htmlFor="tr-justificativa" className="block text-sm font-medium text-[var(--text)]">2. Justificativa e Objetivo</label>
+          <textarea id="tr-justificativa" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">3. Mapa de Riscos (Resumo)</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm border-orange-300 focus:border-orange-500 text-[var(--text)] focus:ring-orange-500" rows={2} readOnly value="15 Riscos Identificados (Gerado Automaticamente - Ver Anexo)"></textarea>
+          <label htmlFor="tr-riscos" className="block text-sm font-medium text-[var(--text)]">3. Mapa de Riscos (Resumo)</label>
+          <textarea id="tr-riscos" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm border-orange-300 focus:border-orange-500 text-[var(--text)] focus:ring-orange-500" rows={2} readOnly value="15 Riscos Identificados (Gerado Automaticamente - Ver Anexo)"></textarea>
         </div>
         <button className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-hover)]">Gerar TR Completo</button>
       </div>

@@ -7,16 +7,16 @@ export function Etp() {
       </header>
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-5">
          <div>
-          <label className="block text-sm font-medium text-[var(--text)]">1. Descrição da Necessidade</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={2}></textarea>
+          <label htmlFor="etp-descricao" className="block text-sm font-medium text-[var(--text)]">1. Descrição da Necessidade</label>
+          <textarea id="etp-descricao" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={2}></textarea>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">2. Requisitos da Contratação</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
+          <label htmlFor="etp-requisitos" className="block text-sm font-medium text-[var(--text)]">2. Requisitos da Contratação</label>
+          <textarea id="etp-requisitos" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">3. Levantamento de Mercado</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
+          <label htmlFor="etp-mercado" className="block text-sm font-medium text-[var(--text)]">3. Levantamento de Mercado</label>
+          <textarea id="etp-mercado" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3}></textarea>
         </div>
         <button className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-hover)]">Gerar ETP</button>
       </div>

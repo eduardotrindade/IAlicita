@@ -15,9 +15,14 @@ export function MonitorPCA() {
     if (!q) return
     setLoading(true)
     setSearched(true)
-    const items = await searchPncp({ q, tam_pagina: 50 })
-    setData(items)
-    setLoading(false)
+    try {
+      const items = await searchPncp({ q, tam_pagina: 50 })
+      setData(items)
+    } catch {
+      setData([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   function downloadCsv() {

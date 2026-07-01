@@ -8,12 +8,12 @@ export function Propostas() {
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--text)]">Custo Direto do Projeto (R$)</label>
-            <input type="text" className="mt-1 w-full rounded-md border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2 text-sm text-[var(--text)]" defaultValue="150.000,00" />
+            <label htmlFor="prop-custo" className="block text-xs font-medium text-[var(--text)]">Custo Direto do Projeto (R$)</label>
+            <input id="prop-custo" type="text" className="mt-1 w-full rounded-md border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2 text-sm text-[var(--text)]" defaultValue="150.000,00" />
           </div>
            <div>
-            <label className="block text-xs font-medium text-[var(--text)]">Tributos Adotados (ISS, PIS, COFINS)</label>
-            <input type="text" className="mt-1 w-full rounded-md border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2 text-sm text-[var(--text)]" defaultValue="14,25%" />
+            <label htmlFor="prop-tributos" className="block text-xs font-medium text-[var(--text)]">Tributos Adotados (ISS, PIS, COFINS)</label>
+            <input id="prop-tributos" type="text" className="mt-1 w-full rounded-md border border-[var(--border)] bg-[var(--surface-hover)] px-3 py-2 text-sm text-[var(--text)]" defaultValue="14,25%" />
           </div>
         </div>
         <div className="p-4 bg-[var(--surface-hover)] rounded-lg">

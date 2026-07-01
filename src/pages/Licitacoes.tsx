@@ -17,9 +17,14 @@ export function Licitacoes() {
   const fetchData = useCallback(async (query: string) => {
     setLoading(true)
     setSearched(true)
-    const items = await searchPncp({ q: query || 'software', tam_pagina: 30 })
-    setData(items)
-    setLoading(false)
+    try {
+      const items = await searchPncp({ q: query || 'software', tam_pagina: 30 })
+      setData(items)
+    } catch {
+      setData([])
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   const portals = useMemo(() => {

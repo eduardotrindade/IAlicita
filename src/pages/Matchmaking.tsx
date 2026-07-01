@@ -20,16 +20,20 @@ export function Matchmaking() {
       return
     }
     setIsSearching(true)
+    try {
+      const [cnpjResult, pncpResult] = await Promise.all([
+        lookupCnpj(digits),
+        searchPncp({ q: 'tecnologia', tam_pagina: 20 }),
+      ])
 
-    const [cnpjResult, pncpResult] = await Promise.all([
-      lookupCnpj(digits),
-      searchPncp({ q: 'tecnologia', tam_pagina: 20 }),
-    ])
-
-    if (cnpjResult) setCnpjData(cnpjResult)
-    else setError('CNPJ não encontrado na ReceitaWS')
-    setProcurements(pncpResult)
-    setIsSearching(false)
+      if (cnpjResult) setCnpjData(cnpjResult)
+      else setError('CNPJ não encontrado na ReceitaWS')
+      setProcurements(pncpResult)
+    } catch {
+      setError('Erro ao consultar as APIs')
+    } finally {
+      setIsSearching(false)
+    }
   }, [cnpj])
 
   useEffect(() => {
@@ -38,7 +42,7 @@ export function Matchmaking() {
     if (!atividade) return
     const words = atividade.split(/\s+/).filter((w) => w.length > 3)
     if (words.length > 0) {
-      searchPncp({ q: words.slice(0, 3).join(' '), tam_pagina: 15 }).then(setProcurements)
+      searchPncp({ q: words.slice(0, 3).join(' '), tam_pagina: 15 }).then(setProcurements).catch(() => {})
     }
   }, [cnpjData])
 

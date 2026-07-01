@@ -7,12 +7,12 @@ export function Dod() {
       </header>
       <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-5">
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">1. Necessidade da Contratação</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3} placeholder="Descreva o problema a ser resolvido..."></textarea>
+          <label htmlFor="dod-necessidade" className="block text-sm font-medium text-[var(--text)]">1. Necessidade da Contratação</label>
+          <textarea id="dod-necessidade" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3} placeholder="Descreva o problema a ser resolvido..."></textarea>
         </div>
         <div>
-          <label className="block text-sm font-medium text-[var(--text)]">2. Resultados Esperados</label>
-          <textarea className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3} placeholder="Benefícios diretos e indiretos..."></textarea>
+          <label htmlFor="dod-resultados" className="block text-sm font-medium text-[var(--text)]">2. Resultados Esperados</label>
+          <textarea id="dod-resultados" className="mt-1 block w-full rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text)] focus:border-[var(--brand)] focus:ring-[var(--brand)]" rows={3} placeholder="Benefícios diretos e indiretos..."></textarea>
         </div>
         <button className="rounded-md bg-[var(--brand)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--brand-hover)]">Gerar DOD (PDF)</button>
       </div>

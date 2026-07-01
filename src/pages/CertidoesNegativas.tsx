@@ -17,13 +17,18 @@ export function CertidoesNegativas() {
       return
     }
     setLoading(true)
-    const data = await lookupCnpj(digits)
-    if (!data) {
-      setError('CNPJ não encontrado na ReceitaWS')
-    } else {
-      setResult(data)
+    try {
+      const data = await lookupCnpj(digits)
+      if (!data) {
+        setError('CNPJ não encontrado na ReceitaWS')
+      } else {
+        setResult(data)
+      }
+    } catch {
+      setError('Erro ao consultar a ReceitaWS')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const statusColor = (situacao: string) => {

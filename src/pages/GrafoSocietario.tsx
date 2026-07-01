@@ -17,13 +17,18 @@ export function GrafoSocietario() {
       return
     }
     setLoading(true)
-    const data = await lookupCnpj(digits)
-    if (!data) {
-      setError('CNPJ não encontrado')
-    } else {
-      setResult(data)
+    try {
+      const data = await lookupCnpj(digits)
+      if (!data) {
+        setError('CNPJ não encontrado')
+      } else {
+        setResult(data)
+      }
+    } catch {
+      setError('Erro ao consultar a ReceitaWS')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
