@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+.next/
 
 # Environment variables
 .env
@@ -36,6 +37,11 @@ temp/
 __pycache__/
 *.pyc
 
-# Vercel local env (contains OIDC token)
-.env.local
-.env*
+# Next.js
+.next/
+out/
+
+# Biome
+.biome/
+tsconfig.tsbuildinfo
+

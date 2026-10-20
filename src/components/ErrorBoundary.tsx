@@ -1,3 +1,5 @@
+'use client'
+
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
 type Props = { children: ReactNode; fallback?: ReactNode }
@@ -17,20 +19,22 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return this.props.fallback ?? (
-        <div className="flex flex-col items-center justify-center py-20 space-y-4">
-          <p className="text-base font-semibold text-[var(--text)]">Algo deu errado</p>
-          <p className="text-sm text-[var(--muted)] max-w-md text-center">
-            Ocorreu um erro inesperado. Tente recarregar a página.
-          </p>
-          <button
-            type="button"
-            onClick={() => this.setState({ hasError: false })}
-            className="text-sm font-medium text-[var(--accent)] hover:underline"
-          >
-            Tentar novamente
-          </button>
-        </div>
+      return (
+        this.props.fallback ?? (
+          <div className="flex flex-col items-center justify-center space-y-4 py-20">
+            <p className="text-base font-semibold text-[var(--text)]">Algo deu errado</p>
+            <p className="max-w-md text-center text-sm text-[var(--muted)]">
+              Ocorreu um erro inesperado. Tente recarregar a página.
+            </p>
+            <button
+              type="button"
+              onClick={() => this.setState({ hasError: false })}
+              className="text-sm font-medium text-[var(--accent)] hover:underline"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        )
       )
     }
     return this.props.children

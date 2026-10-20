@@ -1,6 +1,19 @@
-import { memo } from 'react'
-import type { Procurement } from '../types'
-import { countByUf } from '../utils/countByUf'
+'use client'
+
+import { countByUf } from '@/lib/countByUf'
+import type { Procurement } from '@/types'
+
+function mixHex(a: string, b: string, t: number): string {
+  const h = (x: string) => Number.parseInt(x.slice(1), 16)
+  const r1 = (h(a) >> 16) & 255
+  const g1 = (h(a) >> 8) & 255
+  const b1 = h(a) & 255
+  const r2 = (h(b) >> 16) & 255
+  const g2 = (h(b) >> 8) & 255
+  const b2 = h(b) & 255
+  const k = t / 100
+  return `rgb(${Math.round(r1 + (r2 - r1) * k)},${Math.round(g1 + (g2 - g1) * k)},${Math.round(b1 + (b2 - b1) * k)})`
+}
 
 type Props = {
   items: Procurement[]
@@ -8,60 +21,26 @@ type Props = {
   onSelectUf: (uf: string | null) => void
 }
 
-export const UfHeatStrip = memo(function UfHeatStrip({ items, selectedUf, onSelectUf }: Props) {
+export function UfHeatStrip({ items, selectedUf, onSelectUf }: Props) {
   const counts = countByUf(items)
-  const max = Math.max(1, ...Object.values(counts))
-  const ufs = Object.entries(counts).sort((a, b) => b[1] - a[1])
+  const max = Math.max(...Object.values(counts), 1)
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1])
 
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-[var(--text)]">
-          Oportunidades por UF (mapa de calor simplificado)
-        </h3>
-        {selectedUf ? (
-          <button
-            type="button"
-            className="text-xs font-medium text-[var(--accent)] hover:underline"
-            onClick={() => onSelectUf(null)}
-          >
-            Limpar UF
-          </button>
-        ) : null}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {ufs.map(([uf, n]) => {
-          const intensity = n / max
-          const active = selectedUf === uf
-          return (
-            <button
-              key={uf}
-              type="button"
-              title={`${uf}: ${n} oportunidade(s)`}
-              onClick={() => onSelectUf(active ? null : uf)}
-              className={`min-w-[3.25rem] rounded-lg border px-2 py-2 text-center transition-all ${
-                active
-                  ? 'border-[var(--accent)] ring-2 ring-[var(--ring)]'
-                  : 'border-[var(--border)] hover:border-[var(--accent-dim)]'
-              }`}
-              style={{
-                background: `color-mix(in srgb, var(--heat) ${Math.round(intensity * 100)}%, var(--surface))`,
-              }}
-            >
-              <span className="block text-xs font-bold text-[var(--text)]">
-                {uf}
-              </span>
-              <span className="block font-mono text-[10px] text-[var(--muted)]">
-                {n}
-              </span>
-            </button>
-          )
-        })}
-      </div>
-      <p className="mt-3 text-xs text-[var(--muted)]">
-        Clique em um estado para filtrar a lista abaixo. Em uma próxima etapa,
-        isto pode ser substituído pelo mapa SVG do Brasil.
-      </p>
+    <div className="flex flex-wrap gap-2">
+      {sorted.map(([uf, n]) => (
+        <button
+          key={uf}
+          type="button"
+          onClick={() => onSelectUf(selectedUf === uf ? null : uf)}
+          className={`min-w-[3.25rem] rounded-lg border border-[var(--border)] p-2 text-xs font-bold text-[var(--text)] ${
+            selectedUf === uf ? 'outline outline-2 outline-[var(--accent)]' : ''
+          }`}
+          style={{ background: mixHex('#0d9488', '#132a45', (n / max) * 100) }}
+        >
+          {uf} {n}
+        </button>
+      ))}
     </div>
   )
-})
+}

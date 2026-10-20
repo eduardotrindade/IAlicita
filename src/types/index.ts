@@ -1,6 +1,7 @@
 export interface Procurement {
   id: string
   title: string
+  description?: string
   portal: string
   uf: string
   city?: string
@@ -14,6 +15,9 @@ export interface Procurement {
   modalidade?: string
   situacao?: string
   dataPublicacao?: string
+  link?: string
+  numeroControlePNCP?: string
+  linkProcessoEletronico?: string
 }
 
 export interface CnpjData {
@@ -25,6 +29,7 @@ export interface CnpjData {
   tipo: string
   porte: string
   natureza_juridica: string
+  capital_social?: number
   atividade_principal: { code: string; text: string }
   atividades_secundarias: { code: string; text: string }[]
   qsa: { nome: string; qual: string }[]
@@ -39,3 +44,4 @@ export interface CnpjData {
   }
   contato: { email: string; telefone: string }
 }
+

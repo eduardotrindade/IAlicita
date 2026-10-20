@@ -23,7 +23,7 @@ Forma mais simples (Windows)
 2) Duplo clique em: rodar-dev.bat
 
 Se o navegador nao abrir sozinho, acesse manualmente:
-   http://127.0.0.1:5173
+   http://localhost:3001
 
 Se aparecer "nao e possivel acessar esta pagina":
 - Confira se o terminal nao mostrou erro em vermelho.

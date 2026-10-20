@@ -38,10 +38,7 @@ export function useFavoriteIds(): {
     [persist],
   )
 
-  const isFavorite = useCallback(
-    (id: string) => favoriteIds.has(id),
-    [favoriteIds],
-  )
+  const isFavorite = useCallback((id: string) => favoriteIds.has(id), [favoriteIds])
 
   return { favoriteIds, toggle, isFavorite }
 }

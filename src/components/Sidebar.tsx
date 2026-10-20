@@ -1,11 +1,7 @@
-import { NavLink } from 'react-router-dom'
+'use client'
 
-const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-    isActive
-      ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-fg)]'
-      : 'text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--text)]'
-  }`
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const group = 'mt-5 first:mt-0'
 const groupTitle =
@@ -14,19 +10,27 @@ const groupTitle =
 type Item = { to: string; label: string; end?: boolean }
 
 function NavGroup({ title, items }: { title: string; items: Item[] }) {
+  const pathname = usePathname()
+
   return (
     <div className={group}>
       <p className={groupTitle}>{title}</p>
-      {items.map((item) => (
-        <NavLink
-          key={item.to}
-          to={item.to}
-          end={item.end}
-          className={linkClass}
-        >
-          {item.label}
-        </NavLink>
-      ))}
+      {items.map((item) => {
+        const isActive = item.end ? pathname === item.to : pathname.startsWith(item.to)
+        return (
+          <Link
+            key={item.to}
+            href={item.to}
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              isActive
+                ? 'bg-[var(--nav-active-bg)] text-[var(--nav-active-fg)]'
+                : 'text-[var(--muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--text)]'
+            }`}
+          >
+            {item.label}
+          </Link>
+        )
+      })}
     </div>
   )
 }
@@ -40,9 +44,7 @@ export function Sidebar() {
             S
           </div>
           <div>
-            <p className="text-sm font-semibold leading-tight text-[var(--text)]">
-              IAlicita
-            </p>
+            <p className="text-sm font-semibold leading-tight text-[var(--text)]">IAlicita</p>
             <p className="text-[10px] uppercase tracking-wide text-[var(--muted)]">
               Portal de Licitações
             </p>
@@ -109,14 +111,12 @@ export function Sidebar() {
           ]}
         />
         <NavGroup
-           title="Auditoria & Compliance"
-           items={[
-             { to: '/grafo-societario', label: 'Grafo Societário (Anticartel)' },
-           ]}
+          title="Auditoria & Compliance"
+          items={[{ to: '/grafo-societario', label: 'Grafo Societário (Anticartel)' }]}
         />
       </nav>
       <footer className="border-t border-[var(--border)] px-4 py-3 text-[10px] text-[var(--muted)]">
-        Dados de exemplo — substitua por APIs reais (PNCP, portais estaduais).
+        Dados reais da PNCP, ReceitaWS e IA.
       </footer>
     </aside>
   )

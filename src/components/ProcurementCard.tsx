@@ -1,6 +1,8 @@
+'use client'
+
 import { memo } from 'react'
-import type { Procurement } from '../types'
-import { formatBrl, formatDatePt, formatPercent } from '../utils/format'
+import { formatBrl, formatDatePt, formatPercent } from '@/lib/format'
+import type { Procurement } from '@/types'
 import { ShareButtons } from './ShareButtons'
 
 type Props = {
@@ -42,8 +44,14 @@ export const ProcurementCard = memo(function ProcurementCard({
             ) : null}
             <h3 className="text-sm font-semibold text-[var(--text)]">{p.title}</h3>
           </div>
+          {p.description && p.description !== p.title ? (
+            <p className="mt-1 line-clamp-2 text-xs text-[var(--text)] opacity-85">
+              {p.description}
+            </p>
+          ) : null}
           <p className="mt-1 text-xs text-[var(--muted)]">
             {p.portal} · {p.uf}
+            {p.orgao ? ` · ${p.orgao}` : ''}
             {p.technicalScore != null ? (
               <span className="ml-2 rounded bg-[var(--accent-muted)] px-1.5 py-0.5 font-mono text-[var(--accent)]">
                 {formatPercent(p.technicalScore)} conf.
@@ -65,12 +73,39 @@ export const ProcurementCard = memo(function ProcurementCard({
           </span>
         ))}
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--text)]">
-        <span>{formatBrl(p.valueBrl)}</span>
-        <span className="text-[var(--muted)]">Prazo {formatDatePt(p.deadline)}</span>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-2.5">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-[var(--text)]">
+          <span className="font-semibold text-emerald-400">{formatBrl(p.valueBrl)}</span>
+          <span className="text-[var(--muted)]">Prazo: {formatDatePt(p.deadline)}</span>
+        </div>
+        {p.link ? (
+          <a
+            href={p.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-md bg-[var(--brand)] px-2.5 py-1 text-xs font-medium text-white transition-opacity hover:opacity-90"
+            title="Acessar edital oficial no portal de origem"
+          >
+            <span>Edital Oficial</span>
+            <svg
+              className="h-3 w-3"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+          </a>
+        ) : null}
       </div>
       {showShare ? (
-        <div className="mt-4 border-t border-[var(--border)] pt-3">
+        <div className="mt-3 border-t border-[var(--border)] pt-2.5">
           <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-[var(--muted)]">
             Enviar oportunidade
           </p>

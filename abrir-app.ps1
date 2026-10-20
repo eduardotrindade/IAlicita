@@ -22,7 +22,7 @@ if (-not (Test-Path 'node_modules')) {
 }
 
 Write-Host ''
-Write-Host 'Servidor: http://127.0.0.1:5173'
+Write-Host 'Servidor: http://localhost:3001'
 Write-Host 'Pare com Ctrl+C'
 Write-Host ''
 
