@@ -2,6 +2,41 @@
 HISTORICO - SmartIA
 =========================================
 
+12/11/2026 - AUDITORIA E VALIDACAO DE APIs DE PORTAIS (COMPRAS.GOV E TRANSPARENCIA)
+------------------------------------------------------------------------------------------
+- Auditadas as rotas de API do Compras.gov.br (`src/app/api/compras-gov/route.ts`) e Portal da Transparência (`src/app/api/transparencia/route.ts`).
+- Validados os fluxos de fallback em memória para resiliência quando endpoints externos federais oscilarem.
+- Executado typecheck e build de produção com sucesso (Next.js 16 + TypeScript, 0 erros).
+
+ARQUIVOS VERIFICADOS:
+- `src/app/api/compras-gov/route.ts`
+- `src/app/api/transparencia/route.ts`
+- `src/hooks/usePortals.ts`
+- `historico.txt`
+
+------------------------------------
+
+10/11/2026 - INTEGRAÇÃO OFICIAL COM O PNCP (PORTAL NACIONAL DE CONTRATAÇÕES PÚBLICAS)
+-----------------------------------------------------------------------------------
+- Implementado módulo de integração oficial com o PNCP conforme diretrizes de https://www.gov.br/pncp/pt-br/pncp/integre-se-ao-pncp e Lei nº 14.133/2021.
+- Criado serviço `src/lib/pncpIntegration.ts` com suporte a:
+  - Seleção de ambiente (Treinamento/Homologação em `https://treina.pncp.gov.br/api/pncp` vs Produção em `https://pncp.gov.br/api/pncp`).
+  - Autenticação e credenciamento via JWT Bearer Token (`POST /v1/usuarios/login`).
+  - Consulta de tabelas de domínio oficiais (modalidades, modos de disputa, amparos legais).
+- Criada rota de API do servidor `src/app/api/pncp/integration/route.ts` para proxy seguro de autenticação, domínios e envio/publicação de contratações.
+- Criada página interativa `src/app/pncp-integracao/page.tsx` com painel de credenciamento, simulador de envio de contratações/editais, consulta de tabelas de domínio e guia passo a passo oficial.
+- Adicionado link no menu lateral (`Sidebar.tsx`) para acesso rápido ao painel de Integração PNCP.
+- Executado typecheck e build de produção com sucesso (Next.js 16 + TypeScript, 0 erros).
+
+ARQUIVOS CRIADOS/ATUALIZADOS:
+- `src/lib/pncpIntegration.ts`
+- `src/app/api/pncp/integration/route.ts`
+- `src/app/pncp-integracao/page.tsx`
+- `src/components/Sidebar.tsx`
+- `historico.txt`
+
+------------------------------------
+
 01/05/2026 - CONFIGURACAO GIT E CI/CD
 ------------------------------------
 - Iniciado repositorio Git local
@@ -54,3 +89,52 @@ PROXIMOS PASSOS:
 - Obter URL publica apos primeiro deploy
 
 =========================================
+
+================================================================================
+HISTORICO - IAlicita
+Diretorio: D:\sistemas\sistemas\IAlicita
+Atualizado em: 31/10/2026 por OpenCode (DeepSeek V4.1 Flash)
+================================================================================
+
+[31/10/2026] AUDITORIA E MAPEAMENTO INICIAL
+--------------------------------------------------------------------------------
+TIPO: Portal de licitações com IA (produto principal de licitações)
+STACK: Next.js 16 + React 19 + Tailwind 4 + TanStack Query + Biome + TypeScript
+PORTAS: 3001 (dev e start, -H 0.0.0.0)
+COMO RODAR: npm install; npm run dev  → http://localhost:3001
+DEPLOY: Vercel (vercel.json) + Dockerfile; Git eduardotrindade/IAlicita @ master
+GIT: github.com/eduardotrindade/IAlicita @ master
+ESTADO: Build de produção OK. 26 páginas + 7 componentes. Integra PNCP e Portal da Transparência via proxy
+PENDENCIAS: Secrets VERCEL_TOKEN / VERCEL_ORG_ID / VERCEL_PROJECT_ID no GitHub Actions; unificar com SmartIA (decidir canônico)
+RISCOS: .env, .env.local e .env.example na raiz — conferir que .env não foi commitado
+NOTAS: O historico.txt antigo descreve React+Vite; o projeto MIGROU para Next.js. Histórico antigo preservado abaixo.
+--------------------------------------------------------------------------------
+
+[31/10/2026] CORRECAO DO BUILD DE PRODUCAO (React duplicado por caixa de caminho)
+--------------------------------------------------------------------------------
+TIPO: Correcao de bug bloqueante de build
+STACK: Next.js 16.4.3 + React 19.3.1 + Tailwind 4 + TanStack Query 5 + Biome + TypeScript
+PORTAS: 3001 (dev e start, -H 0.0.0.0)
+COMO RODAR: cd D:\Sistemas\sistemas\IAlicita; npm install; npm run build; npm run start
+DEPLOY: Vercel (vercel.json) + Dockerfile; Git eduardotrindade/IAlicita @ master
+GIT: github.com/eduardotrindade/IAlicita @ master
+ESTADO: Build de producao OK - 34 rotas (29 estaticas + 6 API dinamicas). typecheck limpo.
+PENDENCIAS: Deploy Vercel depende dos secrets VERCEL_TOKEN / VERCEL_ORG_ID / VERCEL_PROJECT_ID
+RISCOS: ATENCAO - a pasta raiz real e D:\Sistemas (S maiusculo). Rodar npm a partir de D:\sistemas
+        faz o Node resolver dois caminhos distintos para o mesmo modulo e duplicar o React,
+        quebrando o prerender com "Cannot read properties of null (reading 'use')".
+NOTAS:
+  - Sintoma: TypeError: Cannot read properties of null (reading 'use' / 'useContext') em
+    "Generating static pages", inclusive em /_global-error e /_not-found (paginas internas do Next).
+  - Diagnostico: no chunk .next/server/chunks/430.js, o modulo layout-router fazia
+    h = require(81155).vendored["react-ssr"].React e esse React vinha null. O log do webpack
+    listava modulos com D:\Sistemas\... e D:\sistemas\... no MESMO bundle = React duplicado.
+  - Causa raiz: caixa do caminho (D:\sistemas vs D:\Sistemas). NAO era versao de React e
+    NAO era o Turbopack.
+  - Correcao aplicada: remocao de node_modules/.next/package-lock, instalacao limpa e build
+    executado a partir de D:\Sistemas\sistemas\IAlicita. Versoes resolvidas: next 16.4.3,
+    react 19.3.1, react-dom 19.3.1.
+  - Descartado por teste: build com --webpack (mesmo erro) e upgrade para react
+    19.3.0-canary-278794d7-20261002 (mesmo erro).
+  - Arquivos-fonte verificados: 103 arquivos de src/ em UTF-8 valido, sem mojibake.
+--------------------------------------------------------------------------------

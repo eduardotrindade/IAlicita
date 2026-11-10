@@ -97,6 +97,8 @@ export function Sidebar() {
           items={[
             { to: '/empresas', label: 'Empresas' },
             { to: '/portais', label: 'Portais' },
+            { to: '/pncp-integracao', label: 'Integração PNCP Oficial' },
+            { to: '/caixa', label: 'Licitações CAIXA (SICVE)' },
             { to: '/compliance', label: 'Compliance & LGPD' },
           ]}
         />
