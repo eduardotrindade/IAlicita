@@ -1,0 +1,23 @@
+# Antigravity / Gemini Ignore Rules
+node_modules/
+.next/
+.vercel/
+dist/
+out/
+build/
+LEGADO/
+portal_python/
+netlify-drop/
+.git/
+.vscode/
+.idea/
+.biome/
+coverage/
+*.log
+*.tmp
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+*.lock
+package-lock.json
