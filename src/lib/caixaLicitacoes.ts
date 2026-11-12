@@ -28,21 +28,19 @@ export async function searchCaixaLicitacoes(query = 'caixa'): Promise<CaixaLicit
   const buscaTermo = q && !/^(caixa|cef)$/i.test(q)
 
   try {
-    // 1. Consulta direta à API pública do PNCP filtrando pelo CNPJ da CEF
+    // 1. Consulta direta à API pública do PNCP: contratações da CEF abertas para propostas
     const now = new Date()
-    const past = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000)
     const fmt = (d: Date) =>
       `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`
 
     const params = new URLSearchParams({
-      dataInicial: fmt(past),
       dataFinal: fmt(now),
-      codigoUnidadeAdministrativa: CEF_CNPJ_RAW,
+      cnpj: CEF_CNPJ_RAW,
       pagina: '1',
       tamanhoPagina: '50',
     })
 
-    const res = await fetch(`https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?${params}`, {
+    const res = await fetch(`https://pncp.gov.br/api/consulta/v1/contratacoes/proposta?${params}`, {
       headers: { Accept: 'application/json' },
       signal: AbortSignal.timeout(9000),
     })
@@ -57,7 +55,7 @@ export async function searchCaixaLicitacoes(query = 'caixa'): Promise<CaixaLicit
         const matchNum = numeroControle.match(/-(\d+)-\d{4}\/(\d{4})$/)
         const certameNumero = matchNum ? matchNum[1] : ''
         const certameAno = matchNum ? matchNum[2] : ''
-        const deadline = l.dataEncerramentoProposta || l.dataPublicacaoPncp || ''
+        const deadline = l.dataEncerramentoProposta || l.dataAberturaProposta || ''
         const situacaoNome = (l.situacaoCompraNome || '').toLowerCase()
 
         return {
