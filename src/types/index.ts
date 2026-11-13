@@ -44,4 +44,3 @@ export interface CnpjData {
   }
   contato: { email: string; telefone: string }
 }
-

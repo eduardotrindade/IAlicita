@@ -85,7 +85,9 @@ export default function Licitacoes() {
           )
           if (res.ok) {
             const json = await res.json()
-            const rawList = Array.isArray(json.items) ? json.items : json._embedded?.licitacoes || []
+            const rawList = Array.isArray(json.items)
+              ? json.items
+              : json._embedded?.licitacoes || []
             const comprasItems = rawList.map((l: Record<string, unknown>) => ({
               id: String(l.id || l.numeroControlePNCP || l.idCompra || ''),
               title: String(l.title || l.objeto || l.titulo || ''),

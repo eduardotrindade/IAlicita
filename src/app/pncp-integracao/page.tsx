@@ -8,11 +8,19 @@ export default function PncpIntegracaoPage() {
   const [usuario, setUsuario] = useState('integrador.ialicita')
   const [senha, setSenha] = useState('********')
   const [loading, setLoading] = useState(false)
-  const [authResult, setAuthResult] = useState<{ success?: boolean; token?: string; message?: string } | null>(null)
-  const [activeTab, setActiveTab] = useState<'credenciamento' | 'publicacao' | 'dominios' | 'guia'>('credenciamento')
+  const [authResult, setAuthResult] = useState<{
+    success?: boolean
+    token?: string
+    message?: string
+  } | null>(null)
+  const [activeTab, setActiveTab] = useState<'credenciamento' | 'publicacao' | 'dominios' | 'guia'>(
+    'credenciamento',
+  )
 
   // Publicação state
-  const [pubObjeto, setPubObjeto] = useState('Aquisição de Solução de Inteligência Artificial para Automação de Licitações')
+  const [pubObjeto, setPubObjeto] = useState(
+    'Aquisição de Solução de Inteligência Artificial para Automação de Licitações',
+  )
   const [pubValor, setPubValor] = useState('150000.00')
   const [pubModalidade, setPubModalidade] = useState('6') // Pregão Eletrônico
   const [pubResult, setPubResult] = useState<any>(null)
@@ -154,26 +162,34 @@ export default function PncpIntegracaoPage() {
       {activeTab === 'credenciamento' && (
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[var(--text)]">Configuração de Credenciais & Ambiente</h2>
+            <h2 className="text-lg font-semibold text-[var(--text)]">
+              Configuração de Credenciais & Ambiente
+            </h2>
             <p className="mt-1 text-xs text-[var(--muted)]">
               Insira os dados cadastrados no PNCP para autenticação via JSON Web Token (JWT).
             </p>
 
             <form onSubmit={handleLogin} className="mt-4 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-[var(--text)]">Ambiente de Conexão</label>
+                <label className="block text-xs font-medium text-[var(--text)]">
+                  Ambiente de Conexão
+                </label>
                 <select
                   value={env}
                   onChange={(e) => setEnv(e.target.value as any)}
                   className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--text)]"
                 >
-                  <option value="treinamento">Treinamento / Homologação (treina.pncp.gov.br)</option>
+                  <option value="treinamento">
+                    Treinamento / Homologação (treina.pncp.gov.br)
+                  </option>
                   <option value="producao">Produção (pncp.gov.br)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[var(--text)]">CNPJ da Plataforma / Órgão</label>
+                <label className="block text-xs font-medium text-[var(--text)]">
+                  CNPJ da Plataforma / Órgão
+                </label>
                 <input
                   type="text"
                   value={cnpj}
@@ -185,7 +201,9 @@ export default function PncpIntegracaoPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[var(--text)]">Usuário de Integração</label>
+                <label className="block text-xs font-medium text-[var(--text)]">
+                  Usuário de Integração
+                </label>
                 <input
                   type="text"
                   value={usuario}
@@ -196,7 +214,9 @@ export default function PncpIntegracaoPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-[var(--text)]">Senha / Token de Acesso</label>
+                <label className="block text-xs font-medium text-[var(--text)]">
+                  Senha / Token de Acesso
+                </label>
                 <input
                   type="password"
                   value={senha}
@@ -217,7 +237,9 @@ export default function PncpIntegracaoPage() {
           </div>
 
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[var(--text)]">Resultado da Conexão & Status</h2>
+            <h2 className="text-lg font-semibold text-[var(--text)]">
+              Resultado da Conexão & Status
+            </h2>
             <p className="mt-1 text-xs text-[var(--muted)]">
               Retorno do handshake com a API REST do PNCP (Bearer Token).
             </p>
@@ -230,11 +252,15 @@ export default function PncpIntegracaoPage() {
                     : 'border border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300'
                 }`}
               >
-                <p className="font-semibold">{authResult.success ? '✓ Conectado com Sucesso' : '✕ Falha na Conexão'}</p>
+                <p className="font-semibold">
+                  {authResult.success ? '✓ Conectado com Sucesso' : '✕ Falha na Conexão'}
+                </p>
                 <p className="mt-1 text-xs">{authResult.message}</p>
                 {authResult.token && (
                   <div className="mt-3">
-                    <p className="text-[10px] font-mono uppercase text-[var(--muted)]">Token JWT Bearer Ativo:</p>
+                    <p className="text-[10px] font-mono uppercase text-[var(--muted)]">
+                      Token JWT Bearer Ativo:
+                    </p>
                     <code className="mt-1 block max-h-24 overflow-y-auto rounded bg-black/10 p-2 font-mono text-[11px] text-[var(--text)] dark:bg-white/10">
                       {authResult.token}
                     </code>
@@ -255,14 +281,18 @@ export default function PncpIntegracaoPage() {
       {activeTab === 'publicacao' && (
         <div className="grid gap-6 md:grid-cols-2">
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[var(--text)]">Enviar Contratação / Edital para o PNCP</h2>
+            <h2 className="text-lg font-semibold text-[var(--text)]">
+              Enviar Contratação / Edital para o PNCP
+            </h2>
             <p className="mt-1 text-xs text-[var(--muted)]">
               Publicação oficial de aviso de contratação nos termos da Lei 14.133/2021.
             </p>
 
             <form onSubmit={handlePublish} className="mt-4 space-y-4">
               <div>
-                <label className="block text-xs font-medium text-[var(--text)]">Objeto da Contratação</label>
+                <label className="block text-xs font-medium text-[var(--text)]">
+                  Objeto da Contratação
+                </label>
                 <textarea
                   value={pubObjeto}
                   onChange={(e) => setPubObjeto(e.target.value)}
@@ -274,7 +304,9 @@ export default function PncpIntegracaoPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-[var(--text)]">Valor Total Estimado (R$)</label>
+                  <label className="block text-xs font-medium text-[var(--text)]">
+                    Valor Total Estimado (R$)
+                  </label>
                   <input
                     type="text"
                     value={pubValor}
@@ -309,7 +341,9 @@ export default function PncpIntegracaoPage() {
           </div>
 
           <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-[var(--text)]">Comprovante de Publicação / Retorno PNCP</h2>
+            <h2 className="text-lg font-semibold text-[var(--text)]">
+              Comprovante de Publicação / Retorno PNCP
+            </h2>
             <p className="mt-1 text-xs text-[var(--muted)]">
               Metadados gerados e Número de Controle PNCP emitido pela API.
             </p>
@@ -317,15 +351,23 @@ export default function PncpIntegracaoPage() {
             {pubResult ? (
               <div className="mt-4 space-y-3 rounded-lg border border-[var(--border)] bg-[var(--background)] p-4 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="font-medium text-green-600 dark:text-green-400">✓ Publicado com Sucesso</span>
+                  <span className="font-medium text-green-600 dark:text-green-400">
+                    ✓ Publicado com Sucesso
+                  </span>
                   <span className="text-xs text-[var(--muted)]">{pubResult.timestamp}</span>
                 </div>
                 <div>
-                  <p className="text-xs font-mono uppercase text-[var(--muted)]">Número de Controle PNCP:</p>
-                  <p className="font-mono text-base font-bold text-[var(--accent)]">{pubResult.numeroControlePNCP}</p>
+                  <p className="text-xs font-mono uppercase text-[var(--muted)]">
+                    Número de Controle PNCP:
+                  </p>
+                  <p className="font-mono text-base font-bold text-[var(--accent)]">
+                    {pubResult.numeroControlePNCP}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-xs font-mono uppercase text-[var(--muted)]">Mensagem do Servidor:</p>
+                  <p className="text-xs font-mono uppercase text-[var(--muted)]">
+                    Mensagem do Servidor:
+                  </p>
                   <p className="text-xs text-[var(--text)]">{pubResult.message}</p>
                 </div>
               </div>
@@ -342,7 +384,9 @@ export default function PncpIntegracaoPage() {
       {activeTab === 'dominios' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[var(--text)]">Consulta de Tabelas de Domínio Oficiais</h2>
+            <h2 className="text-lg font-semibold text-[var(--text)]">
+              Consulta de Tabelas de Domínio Oficiais
+            </h2>
             <div className="flex gap-2">
               {['modalidades', 'modosdisputa', 'amparoslegais'].map((type) => (
                 <button
@@ -378,7 +422,9 @@ export default function PncpIntegracaoPage() {
                 ) : domainData.length > 0 ? (
                   domainData.map((item, idx) => (
                     <tr key={idx} className="hover:bg-[var(--surface-hover)]">
-                      <td className="px-4 py-3 font-mono font-semibold text-[var(--accent)]">{item.codigo}</td>
+                      <td className="px-4 py-3 font-mono font-semibold text-[var(--accent)]">
+                        {item.codigo}
+                      </td>
                       <td className="px-4 py-3 text-[var(--text)]">{item.descricao}</td>
                     </tr>
                   ))
@@ -398,7 +444,9 @@ export default function PncpIntegracaoPage() {
       {/* Tab 4: Guia Oficial */}
       {activeTab === 'guia' && (
         <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-4">
-          <h2 className="text-lg font-semibold text-[var(--text)]">Instruções Oficiais de Integração ao PNCP</h2>
+          <h2 className="text-lg font-semibold text-[var(--text)]">
+            Instruções Oficiais de Integração ao PNCP
+          </h2>
           <p className="text-sm text-[var(--muted)]">
             Baseado no manual oficial disponível em{' '}
             <a
@@ -413,27 +461,45 @@ export default function PncpIntegracaoPage() {
 
           <div className="grid gap-4 md:grid-cols-2 pt-2">
             <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-4">
-              <h3 className="font-semibold text-sm text-[var(--text)]">1. Cadastro Inicial e Credenciamento</h3>
+              <h3 className="font-semibold text-sm text-[var(--text)]">
+                1. Cadastro Inicial e Credenciamento
+              </h3>
               <p className="mt-1 text-xs text-[var(--muted)]">
-                As plataformas digitais responsáveis pelo envio de dados dos órgãos e entidades públicas devem estar previamente credenciadas no sistema, utilizando CNPJ e senha para autenticação de integração.
+                As plataformas digitais responsáveis pelo envio de dados dos órgãos e entidades
+                públicas devem estar previamente credenciadas no sistema, utilizando CNPJ e senha
+                para autenticação de integração.
               </p>
             </div>
             <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-4">
-              <h3 className="font-semibold text-sm text-[var(--text)]">2. Ambientes de Homologação e Produção</h3>
+              <h3 className="font-semibold text-sm text-[var(--text)]">
+                2. Ambientes de Homologação e Produção
+              </h3>
               <p className="mt-1 text-xs text-[var(--muted)]">
-                O ambiente de Treinamento/Homologação (<code className="text-xs">https://treina.pncp.gov.br</code>) deve ser utilizado para testes de envio de contratações, itens e atas antes da publicação oficial em Produção (<code className="text-xs">https://pncp.gov.br</code>).
+                O ambiente de Treinamento/Homologação (
+                <code className="text-xs">https://treina.pncp.gov.br</code>) deve ser utilizado para
+                testes de envio de contratações, itens e atas antes da publicação oficial em
+                Produção (<code className="text-xs">https://pncp.gov.br</code>).
               </p>
             </div>
             <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-4">
-              <h3 className="font-semibold text-sm text-[var(--text)]">3. Protocolo REST e Formato JSON</h3>
+              <h3 className="font-semibold text-sm text-[var(--text)]">
+                3. Protocolo REST e Formato JSON
+              </h3>
               <p className="mt-1 text-xs text-[var(--muted)]">
-                A comunicação utiliza requisições REST/HTTP 1.1 com payloads em formato JSON codificados em UTF-8. A autenticação exige requisição POST em <code className="text-xs">/v1/usuarios/login</code> retornando token JWT no cabeçalho <code className="text-xs">Authorization: Bearer &lt;token&gt;</code>.
+                A comunicação utiliza requisições REST/HTTP 1.1 com payloads em formato JSON
+                codificados em UTF-8. A autenticação exige requisição POST em{' '}
+                <code className="text-xs">/v1/usuarios/login</code> retornando token JWT no
+                cabeçalho <code className="text-xs">Authorization: Bearer &lt;token&gt;</code>.
               </p>
             </div>
             <div className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-4">
-              <h3 className="font-semibold text-sm text-[var(--text)]">4. Conformidade com a Lei 14.133/2021</h3>
+              <h3 className="font-semibold text-sm text-[var(--text)]">
+                4. Conformidade com a Lei 14.133/2021
+              </h3>
               <p className="mt-1 text-xs text-[var(--muted)]">
-                Todos os dados enviados devem respeitar as tabelas de domínio oficiais (modalidades, modos de disputa, amparos legais e tipos de documentos) para garantir a integridade e validade jurídica das contratações públicas.
+                Todos os dados enviados devem respeitar as tabelas de domínio oficiais (modalidades,
+                modos de disputa, amparos legais e tipos de documentos) para garantir a integridade
+                e validade jurídica das contratações públicas.
               </p>
             </div>
           </div>

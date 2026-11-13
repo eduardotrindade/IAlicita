@@ -17,8 +17,11 @@ export async function GET(request: NextRequest) {
     })
   } catch (err) {
     return NextResponse.json(
-      { success: false, message: `Erro ao integrar com licitações da Caixa: ${(err as Error)?.message}` },
-      { status: 500 }
+      {
+        success: false,
+        message: `Erro ao integrar com licitações da Caixa: ${(err as Error)?.message}`,
+      },
+      { status: 500 },
     )
   }
 }

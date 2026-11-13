@@ -5,12 +5,13 @@
  * https://licitacoes.caixa.gov.br/sicve-web/public/view/portal/portal.jsf
  */
 
-import { searchPncp } from './pncpApi'
 import type { Procurement } from '@/types'
+import { searchPncp } from './pncpApi'
 
 export const CEF_CNPJ = '00.360.305/0001-04'
 export const CEF_CNPJ_RAW = '00360305000104'
-export const CEF_PORTAL_URL = 'https://licitacoes.caixa.gov.br/sicve-web/public/view/portal/portal.jsf'
+export const CEF_PORTAL_URL =
+  'https://licitacoes.caixa.gov.br/sicve-web/public/view/portal/portal.jsf'
 
 export interface CaixaLicitacaoItem extends Procurement {
   isCaixa: boolean
@@ -66,9 +67,10 @@ export async function searchCaixaLicitacoes(query = 'caixa'): Promise<CaixaLicit
           uf: l.unidadeOrgao?.ufSigla || 'BR',
           city: l.unidadeOrgao?.municipioNome || '',
           valueBrl: Number(l.valorTotalEstimado || l.valorTotalHomologado || 0),
-          status: situacaoNome.includes('encerr') || situacaoNome.includes('homolog')
-            ? 'homologado'
-            : 'aberto',
+          status:
+            situacaoNome.includes('encerr') || situacaoNome.includes('homolog')
+              ? 'homologado'
+              : 'aberto',
           deadline: deadline ? String(deadline).split('T')[0] : '',
           keywordsMatched: [l.modalidadeNome || ''].filter(Boolean),
           technicalScore: 70,
@@ -93,9 +95,11 @@ export async function searchCaixaLicitacoes(query = 'caixa'): Promise<CaixaLicit
       items = viaTextual
         .filter((item) => {
           const texto = `${item.orgao || ''} ${item.description || ''}`.toUpperCase()
-          return texto.includes('CAIXA ECONÔMICA FEDERAL') ||
+          return (
+            texto.includes('CAIXA ECONÔMICA FEDERAL') ||
             texto.includes('CAIXA ECONOMICA FEDERAL') ||
             (item.orgao || '').includes('00.360.305')
+          )
         })
         .map((item) => ({
           ...item,

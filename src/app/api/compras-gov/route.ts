@@ -71,9 +71,10 @@ export async function GET(request: NextRequest) {
       municipio: l.unidadeOrgaoMunicipioNome,
       valueBrl: Number(l.valorTotalEstimado || l.valorTotalHomologado || 0),
       valor: Number(l.valorTotalEstimado || 0),
-      status: l.dataEncerramentoPropostaPncp && new Date(l.dataEncerramentoPropostaPncp) > new Date()
-        ? 'aberto'
-        : 'homologado',
+      status:
+        l.dataEncerramentoPropostaPncp && new Date(l.dataEncerramentoPropostaPncp) > new Date()
+          ? 'aberto'
+          : 'homologado',
       deadline: (l.dataEncerramentoPropostaPncp || l.dataPublicacaoPncp || '').split('T')[0],
       dataPublicacao: (l.dataPublicacaoPncp || '').split('T')[0],
       orgao: l.orgaoEntidadeRazaoSocial || 'Órgão Federal',

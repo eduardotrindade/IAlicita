@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import type { Procurement } from '@/types'
 import { CEF_PORTAL_URL } from '@/lib/caixaLicitacoes'
+import type { Procurement } from '@/types'
 
 export default function CaixaLicitacoesPage() {
   const [items, setItems] = useState<Procurement[]>([])
@@ -37,7 +37,8 @@ export default function CaixaLicitacoesPage() {
               Licitações CAIXA (SICVE)
             </h1>
             <p className="text-sm text-[var(--muted)]">
-              Integração com o Portal de Licitações da Caixa Econômica Federal (CNPJ: 00.360.305/0001-04)
+              Integração com o Portal de Licitações da Caixa Econômica Federal (CNPJ:
+              00.360.305/0001-04)
             </p>
           </div>
           <a
@@ -83,21 +84,23 @@ export default function CaixaLicitacoesPage() {
               </tr>
             ) : items.length > 0 ? (
               items.map((item, idx) => (
-                <tr key={idx} className="hover:bg-[var(--surface-hover)]">
+                <tr key={item.id || idx} className="hover:bg-[var(--surface-hover)]">
                   <td className="px-4 py-3 font-medium text-[var(--text)]">
                     <p className="font-mono text-xs text-[var(--accent)]">{item.id}</p>
-                    <p className="text-[11px] text-[var(--muted)]">{item.orgao || 'CAIXA ECONÔMICA FEDERAL'}</p>
+                    <p className="text-[11px] text-[var(--muted)]">
+                      {item.orgao || 'CAIXA ECONÔMICA FEDERAL'}
+                    </p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-medium text-[var(--text)]">{item.title}</p>
                     <p className="text-xs text-[var(--muted)] line-clamp-1">{item.description}</p>
                   </td>
                   <td className="px-4 py-3 font-mono text-xs text-[var(--text)]">
-                    {item.valueBrl ? `R$ ${item.valueBrl.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : 'Não informado'}
+                    {item.valueBrl
+                      ? `R$ ${item.valueBrl.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                      : 'Não informado'}
                   </td>
-                  <td className="px-4 py-3 text-xs text-[var(--muted)]">
-                    {item.deadline}
-                  </td>
+                  <td className="px-4 py-3 text-xs text-[var(--muted)]">{item.deadline}</td>
                   <td className="px-4 py-3 text-right">
                     <a
                       href={item.link || CEF_PORTAL_URL}

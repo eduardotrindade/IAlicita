@@ -89,12 +89,13 @@ export async function GET(request: NextRequest) {
             city: item.unidadeOrgao?.municipioNome || '',
             valueBrl: Number(item.valorTotalEstimado || item.valorTotalHomologado || 0),
             valor_global: Number(item.valorTotalEstimado || 0),
-            status: item.situacaoCompraNome?.toLowerCase().includes('abert') ||
+            status:
+              item.situacaoCompraNome?.toLowerCase().includes('abert') ||
               item.situacaoCompraNome?.toLowerCase().includes('divulg')
-              ? 'aberto'
-              : item.situacaoCompraNome?.toLowerCase().includes('homolog')
-                ? 'homologado'
-                : 'em_andamento',
+                ? 'aberto'
+                : item.situacaoCompraNome?.toLowerCase().includes('homolog')
+                  ? 'homologado'
+                  : 'em_andamento',
             situacao_id: String(item.situacaoCompraId || '1'),
             situacao_nome: item.situacaoCompraNome || 'Divulgada',
             deadline: deadline.split('T')[0],
@@ -112,7 +113,12 @@ export async function GET(request: NextRequest) {
             linkProcessoEletronico: item.linkProcessoEletronico,
             modoDisputa: item.modoDisputaNome,
             amparoLegal: item.amparoLegal?.nome,
-            esfera_nome: item.orgaoEntidade?.esferaId === 'F' ? 'Federal' : item.orgaoEntidade?.esferaId === 'E' ? 'Estadual' : 'Municipal',
+            esfera_nome:
+              item.orgaoEntidade?.esferaId === 'F'
+                ? 'Federal'
+                : item.orgaoEntidade?.esferaId === 'E'
+                  ? 'Estadual'
+                  : 'Municipal',
           }
         })
 
@@ -125,7 +131,8 @@ export async function GET(request: NextRequest) {
         if (q && q.trim()) {
           const terms = q.toLowerCase().split(/\s+/).filter(Boolean)
           const matched = items.filter((i: any) => {
-            const text = `${i.title} ${i.description} ${i.orgao || ''} ${i.unidade || ''}`.toLowerCase()
+            const text =
+              `${i.title} ${i.description} ${i.orgao || ''} ${i.unidade || ''}`.toLowerCase()
             return terms.some((t: string) => text.includes(t))
           })
           if (matched.length > 0) {

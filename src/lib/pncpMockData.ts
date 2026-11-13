@@ -641,11 +641,31 @@ export function filterFallbackItems(params: {
     const targetUf = params.uf?.trim() && params.uf !== 'BR' ? params.uf.toUpperCase() : 'SP'
     const templateLocations = [
       { uf: targetUf, city: 'São Paulo', orgao: 'Prefeitura Municipal de São Paulo' },
-      { uf: targetUf === 'SP' ? 'RJ' : targetUf, city: 'Rio de Janeiro', orgao: 'Secretaria de Estado de Fazenda e Planejamento' },
-      { uf: targetUf === 'SP' ? 'MG' : targetUf, city: 'Belo Horizonte', orgao: 'Tribunal de Justiça do Estado' },
-      { uf: targetUf === 'SP' ? 'PR' : targetUf, city: 'Curitiba', orgao: 'Prefeitura Municipal de Curitiba' },
-      { uf: targetUf === 'SP' ? 'DF' : targetUf, city: 'Brasília', orgao: 'Ministério da Gestão e da Inovação em Serviços Públicos' },
-      { uf: targetUf === 'SP' ? 'BA' : targetUf, city: 'Salvador', orgao: 'Secretaria de Administração do Estado da Bahia' },
+      {
+        uf: targetUf === 'SP' ? 'RJ' : targetUf,
+        city: 'Rio de Janeiro',
+        orgao: 'Secretaria de Estado de Fazenda e Planejamento',
+      },
+      {
+        uf: targetUf === 'SP' ? 'MG' : targetUf,
+        city: 'Belo Horizonte',
+        orgao: 'Tribunal de Justiça do Estado',
+      },
+      {
+        uf: targetUf === 'SP' ? 'PR' : targetUf,
+        city: 'Curitiba',
+        orgao: 'Prefeitura Municipal de Curitiba',
+      },
+      {
+        uf: targetUf === 'SP' ? 'DF' : targetUf,
+        city: 'Brasília',
+        orgao: 'Ministério da Gestão e da Inovação em Serviços Públicos',
+      },
+      {
+        uf: targetUf === 'SP' ? 'BA' : targetUf,
+        city: 'Salvador',
+        orgao: 'Secretaria de Administração do Estado da Bahia',
+      },
     ]
 
     const templates = [

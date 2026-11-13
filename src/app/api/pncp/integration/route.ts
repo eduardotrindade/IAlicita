@@ -45,8 +45,11 @@ export async function POST(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { success: false, message: 'Falha na autenticação com o PNCP. Verifique CNPJ, usuário e senha.' },
-        { status: 400 }
+        {
+          success: false,
+          message: 'Falha na autenticação com o PNCP. Verifique CNPJ, usuário e senha.',
+        },
+        { status: 400 },
       )
     }
 
@@ -75,8 +78,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, message: 'Ação inválida.' }, { status: 400 })
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: `Erro interno na rota de integração PNCP: ${(error as Error).message}` },
-      { status: 500 }
+      {
+        success: false,
+        message: `Erro interno na rota de integração PNCP: ${(error as Error).message}`,
+      },
+      { status: 500 },
     )
   }
 }
